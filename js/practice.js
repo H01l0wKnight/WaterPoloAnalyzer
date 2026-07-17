@@ -31,6 +31,43 @@ const playersRef = collection(db, "players");
 // ----------------------
 
 async function loadPlayers() {
+    // ----------------------
+// コートクリック
+// ----------------------
+
+const court = document.getElementById("court");
+const positionText = document.getElementById("position");
+
+let clickX = 0;
+let clickY = 0;
+
+court.addEventListener("click", (e) => {
+
+    const rect = court.getBoundingClientRect();
+
+    clickX = e.clientX - rect.left;
+    clickY = e.clientY - rect.top;
+
+    positionText.textContent =
+        `X:${Math.round(clickX)}  Y:${Math.round(clickY)}`;
+
+    // 古いマーカーを削除
+    const oldMarker = document.querySelector(".tempMarker");
+    if (oldMarker) {
+        oldMarker.remove();
+    }
+
+    // 新しいマーカー
+    const marker = document.createElement("div");
+
+    marker.className = "marker tempMarker";
+
+    marker.style.left = clickX + "px";
+    marker.style.top = clickY + "px";
+
+    court.appendChild(marker);
+
+});
 
     playerSelect.innerHTML = "";
 
