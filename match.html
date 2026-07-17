@@ -362,7 +362,27 @@ Excel出力
 
 
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCTvhEP37XzPOm2Y81qSYFrlU9KyxJr138",
+    authDomain: "waterpoloanalyzer.firebaseapp.com",
+    projectId: "waterpoloanalyzer",
+    storageBucket: "waterpoloanalyzer.firebasestorage.app",
+    messagingSenderId: "168983018272",
+    appId: "1:168983018272:web:6c3b32c9dfd021775f7545"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 // =====================
 // 選手読み込み
 // =====================
@@ -453,7 +473,7 @@ document.getElementById("position").innerHTML =
 // 登録
 // =====================
 
-function saveMatch(){
+async function saveMatch(){
 
 
 const player =
@@ -488,21 +508,21 @@ return;
 let area=getArea(x,y);
 
 
-matches.push({
+await addDoc(collection(db,"matches"),{
 
-player:player,
+    player:player,
 
-period:period,
+    period:period,
 
-shotType:shotType,
+    shotType:shotType,
 
-result:result,
+    result:result,
 
-x:Math.round(x),
+    x:Math.round(x),
 
-y:Math.round(y),
+    y:Math.round(y),
 
-area:area
+    area:area
 
 });
 
