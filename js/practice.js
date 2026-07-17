@@ -4,6 +4,8 @@ import {
     collection,
     getDocs,
     addDoc,
+    deleteDoc,
+    doc,
     serverTimestamp,
     onSnapshot,
     query,
@@ -275,5 +277,90 @@ onSnapshot(practiceQuery,(snapshot)=>{
 `;
 
     });
+
+});
+const table = document.getElementById("practiceTable");
+
+const practiceQuery = query(
+    practiceRef,
+    orderBy("createdAt","desc")
+);
+
+onSnapshot(practiceQuery,(snapshot)=>{
+
+    table.innerHTML="";
+
+    // コート上のマーカー削除
+    document.querySelectorAll(".savedMarker")
+        .forEach(m=>m.remove());
+
+    snapshot.forEach((item)=>{
+
+        const data = item.data();
+
+        let resultText="";
+
+        if(data.result==="goal") resultText="ゴール";
+        if(data.result==="miss") resultText="外れ";
+        if(data.result==="gk") resultText="GKセーブ";
+
+        // ===== 表 =====
+
+        table.innerHTML += `
+        <tr>
+            <td>${data.date}</td>
+            <td>${data.playerName}</td>
+            <td>${data.menu}</td>
+            <td>${resultText}</td>
+            <td>
+                <button class="deleteBtn"
+                    data-id="${item.id}">
+                    🗑
+                </button>
+            </td>
+        </tr>
+        `;
+
+        // ===== コートへ表示 =====
+
+        const marker=document.createElement("div");
+
+        marker.classList.add("marker");
+        marker.classList.add("savedMarker");
+
+        if(data.result==="goal")
+            marker.classList.add("goalShot");
+
+        if(data.result==="miss")
+            marker.classList.add("missShot");
+
+        if(data.result==="gk")
+            marker.classList.add("gkShot");
+
+        marker.style.left=data.x+"px";
+        marker.style.top=data.y+"px";
+
+        court.appendChild(marker);
+
+    });
+
+    // 削除イベント
+
+    document.querySelectorAll(".deleteBtn")
+        .forEach(button=>{
+
+            button.addEventListener("click",async()=>{
+
+                if(confirm("削除しますか？")){
+
+                    await deleteDoc(
+                        doc(db,"practice",button.dataset.id)
+                    );
+
+                }
+
+            });
+
+        });
 
 });
