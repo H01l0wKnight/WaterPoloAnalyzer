@@ -1,58 +1,133 @@
-#court{
+main{
 
+    max-width:1100px;
 
-width:800px;
+    margin:auto;
 
-height:400px;
-
-background:#5ec8f5;
-
-margin:20px auto;
-
-border:4px solid #003366;
-
-position:relative;
-
-cursor:pointer;
-
+    padding:30px;
 
 }
 
 
 
-/*センターライン*/
+.control{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.control select,
+.control input,
+.control button{
+
+    padding:10px 15px;
+
+    font-size:16px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+}
+
+
+
+.control button{
+
+    background:#003366;
+
+    color:white;
+
+    border:none;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.control button:hover{
+
+    background:#0055aa;
+
+}
+
+
+
+/* ====================
+   水球コート
+==================== */
+
+
+#court{
+
+    position:relative;
+
+    width:900px;
+
+    height:450px;
+
+    margin:30px auto;
+
+    background:#4FC3F7;
+
+    border:5px solid white;
+
+    box-shadow:0 0 10px gray;
+
+    cursor:crosshair;
+
+    overflow:hidden;
+
+}
+
+
+
+/* センターライン */
 
 .centerLine{
 
-position:absolute;
+    position:absolute;
 
-width:3px;
+    left:50%;
 
-height:100%;
+    top:0;
 
-background:white;
+    width:3px;
 
-left:50%;
+    height:100%;
 
+    background:white;
 
 }
 
 
 
-
-/*ゴール*/
+/* ゴール */
 
 .goal{
 
-position:absolute;
+    position:absolute;
 
-width:100px;
+    width:12px;
 
-height:20px;
+    height:100px;
 
-background:white;
+    background:red;
 
-top:0;
+    top:175px;
 
 }
 
@@ -60,7 +135,7 @@ top:0;
 
 .leftGoal{
 
-left:0;
+    left:0;
 
 }
 
@@ -68,79 +143,79 @@ left:0;
 
 .rightGoal{
 
-right:0;
+    right:0;
 
 }
 
 
 
 
-/*シュート位置表示*/
+
+/* ====================
+   シュートマーカー
+==================== */
+
 
 .marker{
 
+    position:absolute;
 
-position:absolute;
+    width:18px;
 
-width:15px;
+    height:18px;
 
-height:15px;
+    border-radius:50%;
 
-border-radius:50%;
+    transform:translate(-50%,-50%);
 
-transform:translate(-50%,-50%);
+    border:2px solid white;
 
-
-}
-
-
-
-.goalMark{
-
-background:red;
+    z-index:10;
 
 }
 
 
 
-.missMark{
+.goalShot{
 
-background:black;
-
-}
-
-
-
-.gkMark{
-
-background:yellow;
-
-border:1px solid black;
+    background:#00cc00;
 
 }
 
 
 
+.missShot{
 
-button{
-
-padding:10px 20px;
-
-margin:5px;
+    background:#ff0000;
 
 }
 
 
+
+.gkShot{
+
+    background:#FFD700;
+
+}
+
+
+
+
+
+/* ====================
+   表
+==================== */
 
 
 table{
 
-width:100%;
+    width:100%;
 
-border-collapse:collapse;
+    border-collapse:collapse;
 
-background:white;
+    margin-top:30px;
 
+    background:white;
 
 }
 
@@ -148,10 +223,83 @@ background:white;
 
 th,td{
 
+    border:1px solid #999;
 
-border:1px solid #aaa;
+    padding:10px;
 
-padding:8px;
+    text-align:center;
+
+}
+
+
+
+th{
+
+    background:#003366;
+
+    color:white;
+
+}
+
+
+
+
+/* 削除 */
+
+.deleteBtn{
+
+    background:red;
+
+    color:white;
+
+    border:none;
+
+    padding:8px 12px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+}
+
+
+
+.deleteBtn:hover{
+
+    background:#cc0000;
+
+}
+
+
+
+
+
+#position{
+
+    text-align:center;
+
+    font-size:18px;
+
+    margin-top:20px;
+
+    color:#003366;
+
+}
+
+
+
+
+
+@media(max-width:950px){
+
+
+#court{
+
+    width:100%;
+
+    height:300px;
+
+}
 
 
 }
