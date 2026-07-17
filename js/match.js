@@ -583,15 +583,7 @@ matchRef,
         ){
 
 
-            createMarker(
 
-                data.x,
-
-                data.y,
-
-                data.result
-
-            );
 
 
         }
