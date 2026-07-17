@@ -4,10 +4,12 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>水球アナリストシステム</title>
+<title>WaterPolo Analyzer</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/home.css">
 
 </head>
 
@@ -15,118 +17,44 @@
 
 <header>
 
-<h1>🏊 水球アナリストシステム</h1>
+<h1>🏊 WaterPolo Analyzer</h1>
+
+<p>水球分析システム</p>
 
 </header>
 
-<div class="menu">
+<main>
 
-<a href="player.html">
-
-<div class="card">
-
-<h2>👤 選手管理</h2>
-
-<p>
-
-選手の追加・編集・削除
-
-</p>
-
-</div>
-
+<a href="player.html" class="menuCard">
+👤<br>
+選手管理
 </a>
 
-<a href="practice.html">
-
-<div class="card">
-
-<h2>🏀 練習シュート記録</h2>
-
-<p>
-
-練習の成功率を記録
-
-</p>
-
-</div>
-
+<a href="practice.html" class="menuCard">
+🏊<br>
+練習記録
 </a>
 
-<a href="match.html">
-
-<div class="card">
-
-<h2>🎯 試合シュート位置</h2>
-
-<p>
-
-コートをクリックして記録
-
-</p>
-
-</div>
-
+<a href="match.html" class="menuCard">
+🏆<br>
+試合記録
 </a>
 
-<a href="analysis.html">
-
-<div class="card">
-
-<h2>📈 分析画面</h2>
-
-<p>
-
-成功率・ヒートマップ
-
-</p>
-
-
-</div>
-
+<a href="analysis.html" class="menuCard">
+📊<br>
+分析
 </a>
 
-</div>
-<button onclick="deleteAllData()">
+</main>
 
-⚠ テストデータ削除
+<footer>
 
-</button>
+Version 1.0
+
+</footer>
+
+<script type="module" src="js/home.js"></script>
 
 </body>
 
 </html>
-
-<script>
-    function deleteAllData(){
-
-
-let result = confirm(
-"全ての記録データを削除しますか？"
-);
-
-
-if(result){
-
-
-localStorage.removeItem("players");
-
-
-localStorage.removeItem("practices");
-
-
-localStorage.removeItem("matches");
-
-
-
-alert("データを削除しました");
-
-
-location.reload();
-
-
-}
-
-
-}
-</script>
