@@ -200,33 +200,27 @@ court.addEventListener(
 function getArea(x,y){
 
 
-    if(x < 300){
+    // 上側を右サイド
 
-        return "左";
-
-    }
-
-
-    if(x > 600){
+    if(y < 150){
 
         return "右";
 
     }
 
 
-    if(y < 150){
 
-        return "上";
-
-    }
-
+    // 下側を左サイド
 
     if(y > 300){
 
-        return "下";
+        return "左";
 
     }
 
+
+
+    // 中央エリア
 
     return "中央";
 
