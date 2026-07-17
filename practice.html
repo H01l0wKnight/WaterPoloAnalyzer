@@ -4,210 +4,16 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>練習シュート記録</title>
+<title>練習記録</title>
 
-<link rel="stylesheet" href="css/style.css">
-
-
-<style>
-
-.container{
-
-width:1000px;
-
-margin:auto;
-
-padding:30px;
-
-}
-
-
-
-select,input,textarea{
-
-padding:10px;
-
-margin:5px;
-
-font-size:16px;
-
-}
-
-
-
-button{
-
-padding:10px 20px;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-
-
-/* 水球コート */
-
-#court{
-
-position:relative;
-
-width:900px;
-
-height:450px;
-
-margin:20px auto;
-
-background:#4FC3F7;
-
-border:5px solid white;
-
-box-shadow:0 0 10px gray;
-
-cursor:crosshair;
-
-}
-
-
-
-/* センターライン */
-
-#line{
-
-position:absolute;
-
-left:50%;
-
-top:0;
-
-width:3px;
-
-height:100%;
-
-background:white;
-
-}
-
-
-
-/* ゴール */
-
-.goal{
-
-position:absolute;
-
-width:12px;
-
-height:100px;
-
-background:red;
-
-top:175px;
-
-}
-
-
-
-#leftGoal{
-
-left:0;
-
-}
-
-
-
-#rightGoal{
-
-right:0;
-
-}
-
-
-
-/* シュート位置 */
-
-.marker{
-
-position:absolute;
-
-width:18px;
-
-height:18px;
-
-border-radius:50%;
-
-transform:translate(-50%,-50%);
-
-border:2px solid white;
-
-}
-
-
-
-.goalShot{
-
-background:#00cc00;
-
-}
-
-
-
-.missShot{
-
-background:#ff0000;
-
-}
-
-
-
-
-table{
-
-width:100%;
-
-margin-top:30px;
-
-border-collapse:collapse;
-
-background:white;
-
-}
-
-
-
-th,td{
-
-border:1px solid #999;
-
-padding:10px;
-
-text-align:center;
-
-}
-
-
-
-th{
-
-background:#003366;
-
-color:white;
-
-}
-
-
-
-</style>
-
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/practice.css">
 
 </head>
 
-
 <body>
-
-
 
 <header>
 
@@ -215,88 +21,47 @@ color:white;
 
 </header>
 
+<main>
 
+<div class="form">
 
-<div class="container">
-
-
-
-<select id="player">
-
-</select>
-
-
+<select id="player"></select>
 
 <select id="menu">
 
-<option>フリーシュート</option>
-
-<option>ハンズアップ</option>
-
-<option>ドライブ</option>
-
-<option>ハンツー</option>
-
-<option>カウンター</option>
+<option>通常練習</option>
+<option>速攻</option>
+<option>パスから</option>
+<option>センター</option>
+<option>5mシュート</option>
 
 </select>
-
-
 
 <select id="result">
 
-<option value="goal">
-
-成功
-
-</option>
-
-
-<option value="miss">
-
-失敗
-
-</option>
+<option value="goal">ゴール</option>
+<option value="miss">外れ</option>
+<option value="gk">GKセーブ</option>
 
 </select>
 
+<button id="saveBtn">
 
+登録
 
-<br>
-
-
-<input type="date" id="date">
-
-
-
-<textarea
-
-id="memo"
-
-placeholder="メモ">
-
-</textarea>
-
-
-
-<br>
-
-
-<div id="court">
-
-
-<div id="line"></div>
-
-
-<div class="goal" id="leftGoal"></div>
-
-
-<div class="goal" id="rightGoal"></div>
-
+</button>
 
 </div>
 
+<div id="court">
 
+<div id="centerLine"></div>
+
+<div class="goal left"></div>
+
+<div class="goal right"></div>
+
+</div>
 
 <p id="position">
 
@@ -304,49 +69,17 @@ placeholder="メモ">
 
 </p>
 
-
-
-<button onclick="savePractice()">
-
-保存
-
-</button>
-
-
-
-<button onclick="exportPracticeExcel()">
-
-Excel出力
-
-</button>
-
-<button onclick="resetDisplay()">
-
-表示リセット
-
-</button>
-
-
-
-
-
 <h2>
 
 記録一覧
 
 </h2>
 
-
-
-
 <table>
-
 
 <thead>
 
 <tr>
-
-<th>日付</th>
 
 <th>選手</th>
 
@@ -358,511 +91,31 @@ Excel出力
 
 <th>Y</th>
 
-<th>メモ</th>
+<th>削除</th>
 
 </tr>
 
-
 </thead>
-
-
 
 <tbody id="practiceTable">
 
 </tbody>
 
-
 </table>
-
-
-
-<br>
-
 
 <a href="index.html">
 
 <button>
 
-ホームへ戻る
+🏠 ホームへ戻る
 
 </button>
 
 </a>
 
+</main>
 
-
-</div>
-
-
-
-
-
-<script>
-
-
-// ======================
-// 選手読み込み
-// ======================
-
-
-const players=
-
-JSON.parse(localStorage.getItem("players"))||[];
-
-
-
-const playerSelect=
-
-document.getElementById("player");
-
-
-
-players.forEach(p=>{
-
-
-let option=
-
-document.createElement("option");
-
-
-
-option.value=p.name;
-
-
-option.textContent=
-
-p.number+" "+p.name;
-
-
-
-playerSelect.appendChild(option);
-
-
-
-});
-
-
-
-
-// ======================
-// データ読み込み
-// ======================
-
-
-let practices=
-
-JSON.parse(localStorage.getItem("practices"))||[];
-
-
-
-showPractice();
-
-
-
-
-
-// ======================
-// コートクリック
-// ======================
-
-
-let x=0;
-
-let y=0;
-
-
-
-document.getElementById("court")
-
-.addEventListener("click",function(e){
-
-
-
-let rect=
-
-this.getBoundingClientRect();
-
-
-
-x=e.clientX-rect.left;
-
-
-y=e.clientY-rect.top;
-
-
-
-document.getElementById("position").innerHTML=
-
-"X:"
-+Math.round(x)
-+
-" Y:"
-+Math.round(y);
-
-
-
-});
-
-
-
-
-
-
-
-// ======================
-// 保存
-// ======================
-
-
-function savePractice(){
-
-
-
-const player=
-
-playerSelect.value;
-
-
-
-const menu=
-
-document.getElementById("menu").value;
-
-
-
-const result=
-
-document.getElementById("result").value;
-
-
-
-const date=
-
-document.getElementById("date").value;
-
-
-
-const memo=
-
-document.getElementById("memo").value;
-
-
-
-
-if(x==0 && y==0){
-
-alert("コートをクリックしてください");
-
-return;
-
-}
-
-
-
-
-
-practices.push({
-
-
-date,
-
-player,
-
-menu,
-
-result,
-
-x:Math.round(x),
-
-y:Math.round(y),
-
-memo
-
-
-});
-
-
-
-
-localStorage.setItem(
-
-"practices",
-
-JSON.stringify(practices)
-
-);
-
-
-
-
-
-createMarker(x,y,result);
-
-
-
-showPractice();
-
-
-
-}
-
-
-
-
-
-
-
-// ======================
-// マーカー表示
-// ======================
-
-
-function createMarker(x,y,result){
-
-
-
-let marker=
-
-document.createElement("div");
-
-
-
-marker.classList.add("marker");
-
-
-
-if(result=="goal")
-
-marker.classList.add("goalShot");
-
-
-else
-
-marker.classList.add("missShot");
-
-
-
-marker.style.left=x+"px";
-
-
-marker.style.top=y+"px";
-
-
-
-document.getElementById("court")
-
-.appendChild(marker);
-
-
-
-}
-
-
-
-
-
-
-
-// ======================
-// 表示
-// ======================
-
-
-function showPractice(){
-
-
-
-let html="";
-
-
-
-practices.forEach(p=>{
-
-
-
-let result="";
-
-
-
-if(p.result=="goal")
-
-result="成功";
-
-
-else
-
-result="失敗";
-
-
-
-
-html+=`
-
-<tr>
-
-<td>${p.date}</td>
-
-<td>${p.player}</td>
-
-<td>${p.menu}</td>
-
-<td>${result}</td>
-
-<td>${p.x}</td>
-
-<td>${p.y}</td>
-
-<td>${p.memo}</td>
-
-</tr>
-
-`;
-
-
-
-});
-
-
-
-document.getElementById("practiceTable")
-
-.innerHTML=html;
-
-
-
-}
-
-
-
-
-
-
-
-// ======================
-// Excel出力
-// ======================
-
-
-function exportPracticeExcel(){
-
-
-
-if(practices.length==0){
-
-alert("記録がありません");
-
-return;
-
-}
-
-
-
-let csv=
-
-"日付,選手,練習,結果,X座標,Y座標,メモ\n";
-
-
-
-
-practices.forEach(p=>{
-
-
-let result=
-
-p.result=="goal"?"成功":"失敗";
-
-
-
-csv+=
-
-`${p.date},${p.player},${p.menu},${result},${p.x},${p.y},${p.memo}\n`;
-
-
-
-});
-
-
-
-
-
-const bom=
-
-new Uint8Array([0xEF,0xBB,0xBF]);
-
-
-
-const blob=
-
-new Blob(
-
-[bom,csv],
-
-{type:"text/csv"}
-
-);
-
-
-
-const url=
-
-URL.createObjectURL(blob);
-
-
-
-const a=
-
-document.createElement("a");
-
-
-a.href=url;
-
-
-a.download=
-
-"水球練習シュート記録.csv";
-
-
-
-a.click();
-
-
-
-URL.revokeObjectURL(url);
-
-
-
-}
-// ======================
-// 表示のみリセット
-// ======================
-
-function resetDisplay(){
-
-
-document.getElementById("practiceTable").innerHTML="";
-
-
-
-// コート上のマーカー削除
-
-const markers=
-
-document.querySelectorAll(".marker");
-
-
-markers.forEach(m=>{
-
-m.remove();
-
-});
-
-
-}
-
-
-</script>
-
-
+<script type="module" src="js/practice.js"></script>
 
 </body>
 
