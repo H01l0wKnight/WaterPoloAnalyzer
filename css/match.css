@@ -2,144 +2,45 @@ body{
 
 font-family:"Yu Gothic",sans-serif;
 
-background:#f2f2f2;
+background:#eef7ff;
 
 text-align:center;
 
 }
 
 
-h1{
 
-color:#003366;
+header{
+
+background:#003366;
+
+color:white;
+
+padding:15px;
 
 }
 
 
-/* 水球コート */
 
-#court{
+header a{
 
-position:relative;
+color:white;
+
+}
+
+
+
+main{
 
 width:900px;
-
-height:450px;
 
 margin:auto;
 
-background:#4FC3F7;
-
-border:5px solid white;
-
-box-shadow:0 0 10px gray;
-
-cursor:crosshair;
-
 }
 
 
 
-/* センターライン */
-
-#line{
-
-position:absolute;
-
-left:50%;
-
-top:0;
-
-width:3px;
-
-height:100%;
-
-background:white;
-
-}
-
-
-
-/* ゴール */
-
-.goal{
-
-position:absolute;
-
-width:12px;
-
-height:100px;
-
-background:red;
-
-top:175px;
-
-}
-
-
-#leftGoal{
-
-left:0;
-
-}
-
-
-#rightGoal{
-
-right:0;
-
-}
-
-
-
-/* シュートマーク */
-
-.marker{
-
-position:absolute;
-
-width:18px;
-
-height:18px;
-
-border-radius:50%;
-
-transform:translate(-50%,-50%);
-
-border:2px solid white;
-
-}
-
-
-.goalShot{
-
-background:#00cc00;
-
-}
-
-
-.missShot{
-
-background:red;
-
-}
-
-
-.gkShot{
-
-background:#ffcc00;
-
-}
-
-
-
-/* 入力パネル */
-
-#panel{
-
-width:900px;
-
-margin:20px auto;
+.inputArea{
 
 background:white;
 
@@ -151,18 +52,119 @@ border-radius:10px;
 
 
 
-input,select{
+label{
 
-padding:8px;
+display:block;
 
-margin:5px;
+margin:10px;
 
 }
 
 
+
+select,input{
+
+padding:5px;
+
+}
+
+
+
+#court{
+
+
+width:700px;
+
+height:350px;
+
+background:#66cfff;
+
+margin:20px auto;
+
+position:relative;
+
+border:5px solid #003366;
+
+cursor:crosshair;
+
+
+}
+
+
+/* ゴール */
+
+#goal{
+
+position:absolute;
+
+width:100px;
+
+height:15px;
+
+background:white;
+
+top:0;
+
+left:300px;
+
+}
+
+
+/* センターライン */
+
+#centerLine{
+
+position:absolute;
+
+width:3px;
+
+height:100%;
+
+background:white;
+
+left:50%;
+
+}
+
+
+
+.shot{
+
+position:absolute;
+
+width:14px;
+
+height:14px;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+}
+
+
+
+.success{
+
+background:red;
+
+}
+
+
+
+.fail{
+
+background:black;
+
+}
+
+
+
 button{
 
-padding:10px 20px;
+padding:10px 25px;
+
+margin:10px;
 
 font-size:16px;
 
@@ -172,11 +174,13 @@ font-size:16px;
 
 table{
 
-width:900px;
+width:100%;
 
-margin:auto;
+background:white;
 
 border-collapse:collapse;
+
+margin-top:20px;
 
 }
 
@@ -184,7 +188,7 @@ border-collapse:collapse;
 
 th,td{
 
-border:1px solid black;
+border:1px solid #aaa;
 
 padding:8px;
 
