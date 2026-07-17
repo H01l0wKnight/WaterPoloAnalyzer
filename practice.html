@@ -17,30 +17,38 @@
 
 <header>
 
-<h1>🏊 練習シュート記録</h1>
+<h1>🏊 練習記録</h1>
 
 </header>
 
 <main>
 
-<div class="form">
+<div class="control">
 
 <select id="player"></select>
 
+<input type="date" id="date">
+
 <select id="menu">
 
-<option>通常練習</option>
+<option>シュート練習</option>
+
 <option>速攻</option>
-<option>パスから</option>
+
 <option>センター</option>
+
 <option>5mシュート</option>
+
+<option>カウンター</option>
 
 </select>
 
 <select id="result">
 
 <option value="goal">ゴール</option>
+
 <option value="miss">外れ</option>
+
 <option value="gk">GKセーブ</option>
 
 </select>
@@ -55,7 +63,7 @@
 
 <div id="court">
 
-<div id="centerLine"></div>
+<div class="center"></div>
 
 <div class="goal left"></div>
 
@@ -81,17 +89,13 @@
 
 <tr>
 
+<th>日付</th>
+
 <th>選手</th>
 
-<th>練習</th>
+<th>メニュー</th>
 
 <th>結果</th>
-
-<th>X</th>
-
-<th>Y</th>
-
-<th>削除</th>
 
 </tr>
 
@@ -103,11 +107,13 @@
 
 </table>
 
+<br>
+
 <a href="index.html">
 
 <button>
 
-🏠 ホームへ戻る
+🏠ホームへ戻る
 
 </button>
 
