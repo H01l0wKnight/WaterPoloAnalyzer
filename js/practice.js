@@ -4,7 +4,10 @@ import {
     collection,
     getDocs,
     addDoc,
-    serverTimestamp
+    serverTimestamp,
+    onSnapshot,
+    query,
+    orderBy
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 // ==========================
@@ -182,6 +185,20 @@ async function savePractice(){
         alert("登録しました！");
 
     }
+    clickX = null;
+clickY = null;
+
+positionText.textContent =
+"コートをクリックしてください";
+
+const marker =
+document.querySelector(".tempMarker");
+
+if(marker){
+
+    marker.remove();
+
+}
 
     catch(error){
 
@@ -198,3 +215,65 @@ async function savePractice(){
 // ==========================
 
 loadPlayers();
+// ==========================
+// 練習一覧
+// ==========================
+
+const table = document.getElementById("practiceTable");
+
+const practiceQuery = query(
+    practiceRef,
+    orderBy("createdAt","desc")
+);
+
+onSnapshot(practiceQuery,(snapshot)=>{
+
+    table.innerHTML="";
+
+    snapshot.forEach((doc)=>{
+
+        const data = doc.data();
+
+        let result="";
+
+        switch(data.result){
+
+            case "goal":
+
+                result="ゴール";
+
+                break;
+
+            case "miss":
+
+                result="外れ";
+
+                break;
+
+            case "gk":
+
+                result="GKセーブ";
+
+                break;
+
+        }
+
+        table.innerHTML +=`
+
+<tr>
+
+<td>${data.date}</td>
+
+<td>${data.playerName}</td>
+
+<td>${data.menu}</td>
+
+<td>${result}</td>
+
+</tr>
+
+`;
+
+    });
+
+});
