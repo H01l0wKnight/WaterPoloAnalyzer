@@ -36,6 +36,10 @@ const playerSelect =
 document.getElementById("player");
 
 
+const dateInput =
+document.getElementById("date");
+
+
 const quarterSelect =
 document.getElementById("quarter");
 
@@ -71,6 +75,16 @@ document.getElementById("position");
 
 
 // ==========================
+// 今日の日付
+// ==========================
+
+dateInput.valueAsDate =
+new Date();
+
+
+
+
+// ==========================
 // 選手読み込み
 // ==========================
 
@@ -90,7 +104,7 @@ async function loadPlayers(){
     snapshot.forEach((docSnap)=>{
 
 
-        const p =
+        const player =
         docSnap.data();
 
 
@@ -101,12 +115,14 @@ async function loadPlayers(){
 
 
         option.value =
-        p.name;
+        player.name;
 
 
 
         option.textContent =
-        p.number+" "+p.name;
+        player.number
+        +" "
+        +player.name;
 
 
 
@@ -121,6 +137,7 @@ async function loadPlayers(){
 }
 
 
+
 loadPlayers();
 
 
@@ -128,11 +145,13 @@ loadPlayers();
 
 
 // ==========================
-// コートクリック
+// コート位置
 // ==========================
 
 let clickX = 0;
+
 let clickY = 0;
+
 
 
 
@@ -148,14 +167,13 @@ court.addEventListener(
 
     clickX =
     Math.round(
-        e.clientX-rect.left
+        e.clientX - rect.left
     );
-
 
 
     clickY =
     Math.round(
-        e.clientY-rect.top
+        e.clientY - rect.top
     );
 
 
@@ -163,10 +181,9 @@ court.addEventListener(
     positionText.textContent =
 
     "X : "
-    +clickX+
-    "  Y : "
+    +clickX
+    +"   Y : "
     +clickY;
-
 
 
 });
@@ -183,27 +200,38 @@ court.addEventListener(
 function getArea(x,y){
 
 
-    if(x<300)
+    if(x < 300){
+
         return "左";
 
+    }
 
-    if(x>600)
+
+    if(x > 600){
+
         return "右";
 
+    }
 
-    if(y<150)
+
+    if(y < 150){
+
         return "上";
 
+    }
 
-    if(y>300)
+
+    if(y > 300){
+
         return "下";
+
+    }
 
 
     return "中央";
 
 
 }
-
 
 
 
@@ -274,7 +302,9 @@ result
     court.appendChild(marker);
 
 
+
 }
+
 
 
 
@@ -296,6 +326,7 @@ async()=>{
         alert(
         "選手を選択してください"
         );
+
 
         return;
 
@@ -319,11 +350,12 @@ async()=>{
 
 
 
-    const data={
+
+    const data = {
 
 
-        player:
-        playerSelect.value,
+        date:
+        dateInput.value,
 
 
 
@@ -334,6 +366,11 @@ async()=>{
 
         time:
         timeInput.value,
+
+
+
+        player:
+        playerSelect.value,
 
 
 
@@ -382,17 +419,10 @@ async()=>{
 
 
 
-    createMarker(
-        clickX,
-        clickY,
-        resultSelect.value
-    );
-
-
-
     alert(
     "登録しました"
     );
+
 
 
 });
@@ -403,8 +433,10 @@ async()=>{
 
 
 
+
+
 // ==========================
-// 結果文字
+// 結果表示
 // ==========================
 
 function resultText(result){
@@ -414,21 +446,27 @@ function resultText(result){
 
 
         case "goal":
+
             return "ゴール";
 
 
         case "miss":
+
             return "外れ";
 
 
         case "gk":
+
             return "GKセーブ";
 
 
         default:
+
             return result;
 
+
     }
+
 
 }
 
@@ -440,7 +478,7 @@ function resultText(result){
 
 
 // ==========================
-// リアルタイム表示
+// 一覧表示
 // ==========================
 
 onSnapshot(
@@ -452,6 +490,8 @@ matchRef,
 
 
 
+    // 古いマーカー削除
+
     document
     .querySelectorAll(".marker")
     .forEach(marker=>{
@@ -459,6 +499,7 @@ matchRef,
         marker.remove();
 
     });
+
 
 
 
@@ -478,30 +519,55 @@ matchRef,
 
 
 
-        tr.innerHTML=`
+        tr.innerHTML = `
 
-        <td>${data.quarter ?? ""}</td>
 
-        <td>${data.time ?? ""}</td>
+        <td>
+        ${data.date ?? ""}
+        </td>
 
-        <td>${data.player}</td>
 
-        <td>${data.menu}</td>
+        <td>
+        ${data.quarter ?? ""}
+        </td>
 
-        <td>${resultText(data.result)}</td>
 
-        <td>${data.area}</td>
+        <td>
+        ${data.time ?? ""}
+        </td>
+
+
+        <td>
+        ${data.player}
+        </td>
+
+
+        <td>
+        ${data.menu}
+        </td>
+
+
+        <td>
+        ${resultText(data.result)}
+        </td>
+
+
+        <td>
+        ${data.area}
+        </td>
 
 
         <td>
 
-        <button 
+
+        <button
         class="deleteBtn"
         data-id="${docSnap.id}">
 
         削除
 
         </button>
+
 
         </td>
 
@@ -524,9 +590,13 @@ matchRef,
 
 
             createMarker(
+
                 data.x,
+
                 data.y,
+
                 data.result
+
             );
 
 
@@ -541,10 +611,7 @@ matchRef,
 
 
 
-    // ==================
     // 削除処理
-    // ==================
-
 
     document
     .querySelectorAll(".deleteBtn")
@@ -557,23 +624,29 @@ matchRef,
 
 
             if(
-            !confirm(
+            confirm(
             "この記録を削除しますか？"
             )
-            )
-            return;
+            ){
 
 
+                await deleteDoc(
 
-            await deleteDoc(
+                    doc(
 
-                doc(
                     db,
-                    "match",
-                    button.dataset.id
-                )
 
-            );
+                    "match",
+
+                    button.dataset.id
+
+                    )
+
+                );
+
+
+            }
+
 
 
         });
