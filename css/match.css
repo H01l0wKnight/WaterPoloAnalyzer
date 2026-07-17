@@ -1,118 +1,28 @@
-body{
-
-font-family:"Yu Gothic",sans-serif;
-
-background:#eef7ff;
-
-text-align:center;
-
-}
-
-
-
-header{
-
-background:#003366;
-
-color:white;
-
-padding:15px;
-
-}
-
-
-
-header a{
-
-color:white;
-
-}
-
-
-
-main{
-
-width:900px;
-
-margin:auto;
-
-}
-
-
-
-.inputArea{
-
-background:white;
-
-padding:20px;
-
-border-radius:10px;
-
-}
-
-
-
-label{
-
-display:block;
-
-margin:10px;
-
-}
-
-
-
-select,input{
-
-padding:5px;
-
-}
-
-
-
 #court{
 
 
-width:700px;
+width:800px;
 
-height:350px;
+height:400px;
 
-background:#66cfff;
+background:#5ec8f5;
 
 margin:20px auto;
 
+border:4px solid #003366;
+
 position:relative;
 
-border:5px solid #003366;
-
-cursor:crosshair;
+cursor:pointer;
 
 
 }
 
 
-/* ゴール */
 
-#goal{
+/*センターライン*/
 
-position:absolute;
-
-width:100px;
-
-height:15px;
-
-background:white;
-
-top:0;
-
-left:300px;
-
-}
-
-
-/* センターライン */
-
-#centerLine{
+.centerLine{
 
 position:absolute;
 
@@ -124,27 +34,68 @@ background:white;
 
 left:50%;
 
+
 }
 
 
 
-.shot{
+
+/*ゴール*/
+
+.goal{
 
 position:absolute;
 
-width:14px;
+width:100px;
 
-height:14px;
+height:20px;
+
+background:white;
+
+top:0;
+
+}
+
+
+
+.leftGoal{
+
+left:0;
+
+}
+
+
+
+.rightGoal{
+
+right:0;
+
+}
+
+
+
+
+/*シュート位置表示*/
+
+.marker{
+
+
+position:absolute;
+
+width:15px;
+
+height:15px;
 
 border-radius:50%;
 
 transform:translate(-50%,-50%);
 
+
 }
 
 
 
-.success{
+.goalMark{
 
 background:red;
 
@@ -152,7 +103,7 @@ background:red;
 
 
 
-.fail{
+.missMark{
 
 background:black;
 
@@ -160,15 +111,25 @@ background:black;
 
 
 
-button{
+.gkMark{
 
-padding:10px 25px;
+background:yellow;
 
-margin:10px;
-
-font-size:16px;
+border:1px solid black;
 
 }
+
+
+
+
+button{
+
+padding:10px 20px;
+
+margin:5px;
+
+}
+
 
 
 
@@ -176,11 +137,10 @@ table{
 
 width:100%;
 
-background:white;
-
 border-collapse:collapse;
 
-margin-top:20px;
+background:white;
+
 
 }
 
@@ -188,8 +148,10 @@ margin-top:20px;
 
 th,td{
 
+
 border:1px solid #aaa;
 
 padding:8px;
+
 
 }
