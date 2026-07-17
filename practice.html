@@ -2,124 +2,109 @@
 <html lang="ja">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>練習記録 | WaterPolo Analyzer</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>練習記録</title>
-
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/practice.css">
-
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/practice.css">
 </head>
 
 <body>
 
 <header>
-
-<h1>🏊 練習記録</h1>
-
+    <h1>🏊 練習シュート記録</h1>
 </header>
 
 <main>
 
-<div class="control">
+    <section class="control">
 
-<select id="player"></select>
+        <select id="player">
+            <option value="">選手を選択</option>
+        </select>
 
-<input type="date" id="date">
+        <input type="date" id="date">
 
-<select id="menu">
+        <select id="menu">
+            <option value="通常シュート">通常シュート</option>
+            <option value="速攻">速攻</option>
+            <option value="センター">センター</option>
+            <option value="5mシュート">5mシュート</option>
+            <option value="カウンター">カウンター</option>
+        </select>
 
-<option>シュート練習</option>
+        <select id="result">
+            <option value="goal">ゴール</option>
+            <option value="miss">外れ</option>
+            <option value="gk">GKセーブ</option>
+        </select>
 
-<option>速攻</option>
+        <button id="saveBtn">
+            登録
+        </button>
 
-<option>センター</option>
+    </section>
 
-<option>5mシュート</option>
 
-<option>カウンター</option>
+    <h2>シュート位置</h2>
 
-</select>
+    <div id="court">
 
-<select id="result">
+        <div class="centerLine"></div>
 
-<option value="goal">ゴール</option>
+        <div class="goal leftGoal"></div>
 
-<option value="miss">外れ</option>
+        <div class="goal rightGoal"></div>
 
-<option value="gk">GKセーブ</option>
+    </div>
 
-</select>
+    <p id="position">
+        コートをクリックしてください
+    </p>
 
-<button id="saveBtn">
 
-登録
+    <h2>記録一覧</h2>
 
-</button>
+    <table>
 
-</div>
+        <thead>
 
-<div id="court">
+            <tr>
 
-<div class="center"></div>
+                <th>日付</th>
 
-<div class="goal left"></div>
+                <th>選手</th>
 
-<div class="goal right"></div>
+                <th>練習</th>
 
-</div>
+                <th>結果</th>
 
-<p id="position">
+                <th>位置</th>
 
-コートをクリックしてください
+                <th>削除</th>
 
-</p>
+            </tr>
 
-<h2>
+        </thead>
 
-記録一覧
+        <tbody id="practiceTable">
 
-</h2>
+        </tbody>
 
-<table>
+    </table>
 
-<thead>
+    <br>
 
-<tr>
+    <a href="index.html">
 
-<th>日付</th>
+        <button>
 
-<th>選手</th>
+            🏠 ホームへ戻る
 
-<th>メニュー</th>
+        </button>
 
-<th>結果</th>
-
-<th>削除</th>
-
-</tr>
-
-</thead>
-
-<tbody id="practiceTable">
-
-</tbody>
-
-</table>
-
-<br>
-
-<a href="index.html">
-
-<button>
-
-🏠ホームへ戻る
-
-</button>
-
-</a>
+    </a>
 
 </main>
 
