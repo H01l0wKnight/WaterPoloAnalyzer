@@ -1,6 +1,6 @@
 main{
 
-max-width:1100px;
+max-width:1000px;
 
 margin:auto;
 
@@ -8,15 +8,31 @@ padding:30px;
 
 }
 
-.form{
+.control{
 
 display:flex;
 
-gap:10px;
-
 flex-wrap:wrap;
 
+gap:10px;
+
 margin-bottom:20px;
+
+}
+
+select,input{
+
+padding:10px;
+
+font-size:16px;
+
+}
+
+button{
+
+padding:10px 20px;
+
+cursor:pointer;
 
 }
 
@@ -28,17 +44,19 @@ width:900px;
 
 height:450px;
 
-margin:auto;
-
 background:#4FC3F7;
 
+margin:auto;
+
 border:5px solid white;
+
+box-shadow:0 0 10px gray;
 
 cursor:crosshair;
 
 }
 
-#centerLine{
+.center{
 
 position:absolute;
 
@@ -56,7 +74,7 @@ background:white;
 
 position:absolute;
 
-width:12px;
+width:10px;
 
 height:100px;
 
@@ -78,11 +96,45 @@ right:0;
 
 }
 
+.marker{
+
+position:absolute;
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+border:2px solid white;
+
+}
+
+.goalShot{
+
+background:#00cc00;
+
+}
+
+.missShot{
+
+background:#ff0000;
+
+}
+
+.gkShot{
+
+background:#FFD700;
+
+}
+
 table{
 
-width:100%;
-
 margin-top:30px;
+
+width:100%;
 
 border-collapse:collapse;
 
@@ -90,18 +142,10 @@ border-collapse:collapse;
 
 th,td{
 
-border:1px solid #ccc;
-
 padding:10px;
 
+border:1px solid #ccc;
+
 text-align:center;
-
-}
-
-th{
-
-background:#003366;
-
-color:white;
 
 }
