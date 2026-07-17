@@ -7,41 +7,40 @@ import {
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
-// ----------------------
+// ==========================
 // HTML取得
-// ----------------------
+// ==========================
 
 const playerSelect = document.getElementById("player");
 const dateInput = document.getElementById("date");
-
-// ----------------------
-// 今日の日付を自動入力
-// ----------------------
-
-const today = new Date();
-
-dateInput.value = today.toISOString().split("T")[0];
-
-// ----------------------
-// Firebase
-// ----------------------
-
-const playersRef = collection(db, "players");
-
-// ----------------------
-// 選手読み込み
-// ----------------------
-
-async function loadPlayers() {
-    // ----------------------
-// コートクリック
-// ----------------------
-
 const court = document.getElementById("court");
 const positionText = document.getElementById("position");
+const saveBtn = document.getElementById("saveBtn");
 
-let clickX = 0;
-let clickY = 0;
+// ==========================
+// 今日の日付
+// ==========================
+
+const today = new Date();
+dateInput.value = today.toISOString().split("T")[0];
+
+// ==========================
+// Firestore
+// ==========================
+
+const playersRef = collection(db, "players");
+const practiceRef = collection(db, "practice");
+
+// ==========================
+// クリック座標
+// ==========================
+
+let clickX = null;
+let clickY = null;
+
+// ==========================
+// コートクリック
+// ==========================
 
 court.addEventListener("click", (e) => {
 
@@ -53,8 +52,9 @@ court.addEventListener("click", (e) => {
     positionText.textContent =
         `X:${Math.round(clickX)}  Y:${Math.round(clickY)}`;
 
-    // 古いマーカーを削除
+    // 古いマーカー削除
     const oldMarker = document.querySelector(".tempMarker");
+
     if (oldMarker) {
         oldMarker.remove();
     }
@@ -64,6 +64,22 @@ court.addEventListener("click", (e) => {
 
     marker.className = "marker tempMarker";
 
+    const result = document.getElementById("result").value;
+
+    if(result==="goal"){
+
+        marker.classList.add("goalShot");
+
+    }else if(result==="miss"){
+
+        marker.classList.add("missShot");
+
+    }else{
+
+        marker.classList.add("gkShot");
+
+    }
+
     marker.style.left = clickX + "px";
     marker.style.top = clickY + "px";
 
@@ -71,21 +87,28 @@ court.addEventListener("click", (e) => {
 
 });
 
-    playerSelect.innerHTML = "";
+// ==========================
+// 選手読み込み
+// ==========================
 
-    try {
+async function loadPlayers(){
+
+    playerSelect.innerHTML="";
+
+    try{
 
         const snapshot = await getDocs(playersRef);
 
-        if (snapshot.empty) {
+        if(snapshot.empty){
 
             playerSelect.innerHTML =
-                "<option>選手が登録されていません</option>";
+            "<option>選手が登録されていません</option>";
 
             return;
+
         }
 
-        snapshot.forEach((doc) => {
+        snapshot.forEach((doc)=>{
 
             const player = doc.data();
 
@@ -94,13 +117,15 @@ court.addEventListener("click", (e) => {
             option.value = doc.id;
 
             option.textContent =
-                `${player.number}　${player.name}（${player.position}）`;
+                `${player.number} ${player.name} (${player.position})`;
 
             playerSelect.appendChild(option);
 
         });
 
-    } catch (error) {
+    }
+
+    catch(error){
 
         console.error(error);
 
@@ -110,8 +135,66 @@ court.addEventListener("click", (e) => {
 
 }
 
-// ----------------------
+// ==========================
+// 練習記録保存
+// ==========================
+
+saveBtn.addEventListener("click", savePractice);
+
+async function savePractice(){
+
+    if(clickX===null || clickY===null){
+
+        alert("コートをクリックしてください");
+
+        return;
+
+    }
+
+    const playerId = playerSelect.value;
+
+    const playerName =
+        playerSelect.options[playerSelect.selectedIndex].text;
+
+    const date = dateInput.value;
+
+    const menu =
+        document.getElementById("menu").value;
+
+    const result =
+        document.getElementById("result").value;
+
+    try{
+
+        await addDoc(practiceRef,{
+
+            playerId,
+            playerName,
+            date,
+            menu,
+            result,
+            x:Math.round(clickX),
+            y:Math.round(clickY),
+            createdAt:serverTimestamp()
+
+        });
+
+        alert("登録しました！");
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("保存に失敗しました");
+
+    }
+
+}
+
+// ==========================
 // 初期処理
-// ----------------------
+// ==========================
 
 loadPlayers();
