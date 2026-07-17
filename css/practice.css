@@ -1,191 +1,229 @@
 main{
 
-max-width:1000px;
+    max-width:1100px;
 
-margin:auto;
+    margin:auto;
 
-padding:30px;
+    padding:30px;
 
 }
 
 .control{
 
-display:flex;
+    display:flex;
 
-flex-wrap:wrap;
+    flex-wrap:wrap;
 
-gap:10px;
+    justify-content:center;
 
-margin-bottom:20px;
+    gap:15px;
 
-}
-
-select,input{
-
-padding:10px;
-
-font-size:16px;
-
-}
-.tempMarker{
-
-background:#ffffff;
-
-width:18px;
-
-height:18px;
-
-border-radius:50%;
-
-position:absolute;
-
-transform:translate(-50%,-50%);
-
-border:3px solid #003366;
-
-pointer-events:none;
+    margin-bottom:30px;
 
 }
 
-button{
+.control select,
+.control input,
+.control button{
 
-padding:10px 20px;
+    padding:10px 15px;
 
-cursor:pointer;
+    font-size:16px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+}
+
+.control button{
+
+    background:#003366;
+
+    color:white;
+
+    border:none;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.control button:hover{
+
+    background:#0055aa;
 
 }
 
 #court{
 
-position:relative;
+    position:relative;
 
-width:900px;
+    width:900px;
 
-height:450px;
+    height:450px;
 
-background:#4FC3F7;
+    margin:30px auto;
 
-margin:auto;
+    background:#4FC3F7;
 
-border:5px solid white;
+    border:5px solid white;
 
-box-shadow:0 0 10px gray;
+    box-shadow:0 0 10px gray;
 
-cursor:crosshair;
+    cursor:crosshair;
 
 }
 
-.center{
+.centerLine{
 
-position:absolute;
+    position:absolute;
 
-left:50%;
+    left:50%;
 
-width:3px;
+    top:0;
 
-height:100%;
+    width:3px;
 
-background:white;
+    height:100%;
+
+    background:white;
 
 }
 
 .goal{
 
-position:absolute;
+    position:absolute;
 
-width:10px;
+    width:12px;
 
-height:100px;
+    height:100px;
 
-background:red;
+    background:red;
 
-top:175px;
-
-}
-
-.left{
-
-left:0;
+    top:175px;
 
 }
 
-.right{
+.leftGoal{
 
-right:0;
+    left:0;
+
+}
+
+.rightGoal{
+
+    right:0;
 
 }
 
 .marker{
 
-position:absolute;
+    position:absolute;
 
-width:18px;
+    width:18px;
 
-height:18px;
+    height:18px;
 
-border-radius:50%;
+    border-radius:50%;
 
-transform:translate(-50%,-50%);
+    transform:translate(-50%,-50%);
 
-border:2px solid white;
+    border:2px solid white;
 
 }
 
 .goalShot{
 
-background:#00cc00;
+    background:#00cc00;
 
 }
 
 .missShot{
 
-background:#ff0000;
+    background:#ff0000;
 
 }
 
 .gkShot{
 
-background:#FFD700;
+    background:#FFD700;
 
 }
 
 table{
 
-margin-top:30px;
+    width:100%;
 
-width:100%;
+    border-collapse:collapse;
 
-border-collapse:collapse;
+    margin-top:30px;
+
+    background:white;
 
 }
 
 th,td{
 
-padding:10px;
+    border:1px solid #999;
 
-border:1px solid #ccc;
+    padding:10px;
 
-text-align:center;
+    text-align:center;
 
 }
+
+th{
+
+    background:#003366;
+
+    color:white;
+
+}
+
 .deleteBtn{
 
-background:#d9534f;
+    background:red;
 
-color:white;
+    color:white;
 
-border:none;
+    border:none;
 
-padding:6px 12px;
+    padding:8px 12px;
 
-border-radius:5px;
+    border-radius:5px;
 
-cursor:pointer;
+    cursor:pointer;
 
 }
 
 .deleteBtn:hover{
 
-background:#c9302c;
+    background:#cc0000;
+
+}
+
+#position{
+
+    text-align:center;
+
+    font-size:18px;
+
+    margin-top:20px;
+
+    color:#003366;
+
+}
+
+@media(max-width:950px){
+
+#court{
+
+    width:100%;
+
+    height:300px;
+
+}
 
 }
