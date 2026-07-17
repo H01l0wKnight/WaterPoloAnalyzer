@@ -27,6 +27,25 @@ padding:10px;
 font-size:16px;
 
 }
+.tempMarker{
+
+background:#ffffff;
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+position:absolute;
+
+transform:translate(-50%,-50%);
+
+border:3px solid #003366;
+
+pointer-events:none;
+
+}
 
 button{
 
