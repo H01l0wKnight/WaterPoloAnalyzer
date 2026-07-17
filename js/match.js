@@ -1,225 +1,171 @@
-let x = 0;
-let y = 0;
+import { db } from "./firebase.js";
 
 
-//選手読み込み
+import {
 
-window.onload=function(){
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    serverTimestamp
+
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
 
 
-let players =
-JSON.parse(localStorage.getItem("players"))
-||[];
+
+// ==========================
+// Firestore
+// ==========================
+
+const playerRef =
+collection(db,"players");
+
+
+const matchRef =
+collection(db,"match");
 
 
 
-let select =
+// ==========================
+// HTML
+// ==========================
+
+const playerSelect =
 document.getElementById("player");
 
 
+const quarterSelect =
+document.getElementById("quarter");
 
-players.forEach(p=>{
 
+const timeInput =
+document.getElementById("time");
 
-let option=document.createElement("option");
 
+const menuSelect =
+document.getElementById("menu");
 
-option.value=p.name;
 
-option.textContent=p.name;
+const resultSelect =
+document.getElementById("result");
 
 
-select.appendChild(option);
+const saveBtn =
+document.getElementById("saveBtn");
 
 
-});
-
-
-
-loadRecords();
-
-
-}
-
-
-
-
-
-//コートクリック
-
-document.getElementById("court")
-.onclick=function(e){
-
-
-let rect=this.getBoundingClientRect();
-
-
-
-x=e.clientX-rect.left;
-
-y=e.clientY-rect.top;
-
-
-
-document.getElementById("position").innerHTML=
-
-
-"位置 X:"
-+Math.round(x)
-+" Y:"
-+Math.round(y);
-
-
-
-};
-
-
-
-
-
-
-//保存
-
-document.getElementById("saveBtn")
-.onclick=function(){
-
-
-
-let player=
-document.getElementById("player").value;
-
-
-
-if(player==""){
-
-alert("選手を選択してください");
-
-return;
-
-}
-
-
-
-
-let records=
-JSON.parse(localStorage.getItem("matchRecords"))
-||[];
-
-
-
-
-let data={
-
-
-quarter:
-document.getElementById("quarter").value,
-
-
-time:
-document.getElementById("time").value,
-
-
-player:player,
-
-
-menu:
-document.getElementById("menu").value,
-
-
-result:
-document.getElementById("result").value,
-
-
-x:x,
-
-
-y:y
-
-
-
-};
-
-
-
-records.push(data);
-
-
-
-localStorage.setItem(
-"matchRecords",
-JSON.stringify(records)
-);
-
-
-
-loadRecords();
-
-
-
-};
-
-
-
-
-
-
-function loadRecords(){
-
-
-
-let table=
+const table =
 document.getElementById("matchTable");
 
-table.innerHTML="";
+
+const court =
+document.getElementById("court");
+
+
+const positionText =
+document.getElementById("position");
 
 
 
-let records=
-JSON.parse(localStorage.getItem("matchRecords"))
-||[];
+
+// ==========================
+// 選手読み込み
+// ==========================
+
+async function loadPlayers(){
+
+
+    playerSelect.innerHTML =
+    '<option value="">選手を選択</option>';
+
+
+
+    const snapshot =
+    await getDocs(playerRef);
+
+
+
+    snapshot.forEach((docSnap)=>{
+
+
+        const p =
+        docSnap.data();
+
+
+
+        const option =
+        document.createElement("option");
+
+
+
+        option.value =
+        p.name;
+
+
+
+        option.textContent =
+        p.number+" "+p.name;
+
+
+
+        playerSelect.appendChild(option);
+
+
+
+    });
+
+
+
+}
+
+
+loadPlayers();
 
 
 
 
 
-records.forEach((r,index)=>{
+// ==========================
+// コートクリック
+// ==========================
 
-
-let tr=document.createElement("tr");
-
-
-
-tr.innerHTML=`
-
-<td>${r.quarter}</td>
-
-<td>${r.time}</td>
-
-<td>${r.player}</td>
-
-<td>${r.menu}</td>
-
-<td>${r.result}</td>
-
-<td>
-(${Math.round(r.x)},${Math.round(r.y)})
-</td>
-
-<td>
-
-<button onclick="deleteRecord(${index})">
-
-削除
-
-</button>
-
-</td>
-
-`;
+let clickX = 0;
+let clickY = 0;
 
 
 
-table.appendChild(tr);
+court.addEventListener(
+"click",
+(e)=>{
+
+
+    const rect =
+    court.getBoundingClientRect();
+
+
+
+    clickX =
+    Math.round(
+        e.clientX-rect.left
+    );
+
+
+
+    clickY =
+    Math.round(
+        e.clientY-rect.top
+    );
+
+
+
+    positionText.textContent =
+
+    "X : "
+    +clickX+
+    "  Y : "
+    +clickY;
 
 
 
@@ -227,33 +173,414 @@ table.appendChild(tr);
 
 
 
+
+
+
+// ==========================
+// エリア判定
+// ==========================
+
+function getArea(x,y){
+
+
+    if(x<300)
+        return "左";
+
+
+    if(x>600)
+        return "右";
+
+
+    if(y<150)
+        return "上";
+
+
+    if(y>300)
+        return "下";
+
+
+    return "中央";
+
+
 }
 
 
 
 
-window.deleteRecord=function(index){
-
-
-let records=
-JSON.parse(localStorage.getItem("matchRecords"))
-||[];
 
 
 
-records.splice(index,1);
+// ==========================
+// マーカー作成
+// ==========================
+
+function createMarker(
+x,
+y,
+result
+){
+
+
+    const marker =
+    document.createElement("div");
 
 
 
-localStorage.setItem(
-"matchRecords",
-JSON.stringify(records)
-);
+    marker.classList.add(
+        "marker"
+    );
 
 
 
-loadRecords();
+    if(result==="goal"){
+
+
+        marker.classList.add(
+            "goalShot"
+        );
+
+
+    }
+    else if(result==="miss"){
+
+
+        marker.classList.add(
+            "missShot"
+        );
+
+
+    }
+    else{
+
+
+        marker.classList.add(
+            "gkShot"
+        );
+
+
+    }
 
 
 
-};
+    marker.style.left =
+    x+"px";
+
+
+    marker.style.top =
+    y+"px";
+
+
+
+    court.appendChild(marker);
+
+
+}
+
+
+
+
+
+
+// ==========================
+// 登録
+// ==========================
+
+saveBtn.addEventListener(
+"click",
+async()=>{
+
+
+    if(playerSelect.value===""){
+
+
+        alert(
+        "選手を選択してください"
+        );
+
+        return;
+
+    }
+
+
+
+
+    if(clickX===0 && clickY===0){
+
+
+        alert(
+        "コートをクリックしてください"
+        );
+
+
+        return;
+
+    }
+
+
+
+
+    const data={
+
+
+        player:
+        playerSelect.value,
+
+
+
+        quarter:
+        quarterSelect.value,
+
+
+
+        time:
+        timeInput.value,
+
+
+
+        menu:
+        menuSelect.value,
+
+
+
+        result:
+        resultSelect.value,
+
+
+
+        x:
+        clickX,
+
+
+
+        y:
+        clickY,
+
+
+
+        area:
+        getArea(
+            clickX,
+            clickY
+        ),
+
+
+
+        createdAt:
+        serverTimestamp()
+
+
+
+    };
+
+
+
+
+    await addDoc(
+        matchRef,
+        data
+    );
+
+
+
+    createMarker(
+        clickX,
+        clickY,
+        resultSelect.value
+    );
+
+
+
+    alert(
+    "登録しました"
+    );
+
+
+});
+
+
+
+
+
+
+
+// ==========================
+// 結果文字
+// ==========================
+
+function resultText(result){
+
+
+    switch(result){
+
+
+        case "goal":
+            return "ゴール";
+
+
+        case "miss":
+            return "外れ";
+
+
+        case "gk":
+            return "GKセーブ";
+
+
+        default:
+            return result;
+
+    }
+
+}
+
+
+
+
+
+
+
+
+// ==========================
+// リアルタイム表示
+// ==========================
+
+onSnapshot(
+matchRef,
+(snapshot)=>{
+
+
+    table.innerHTML="";
+
+
+
+    document
+    .querySelectorAll(".marker")
+    .forEach(marker=>{
+
+        marker.remove();
+
+    });
+
+
+
+
+    snapshot.forEach(
+    (docSnap)=>{
+
+
+        const data =
+        docSnap.data();
+
+
+
+
+        const tr =
+        document.createElement("tr");
+
+
+
+        tr.innerHTML=`
+
+        <td>${data.quarter ?? ""}</td>
+
+        <td>${data.time ?? ""}</td>
+
+        <td>${data.player}</td>
+
+        <td>${data.menu}</td>
+
+        <td>${resultText(data.result)}</td>
+
+        <td>${data.area}</td>
+
+
+        <td>
+
+        <button 
+        class="deleteBtn"
+        data-id="${docSnap.id}">
+
+        削除
+
+        </button>
+
+        </td>
+
+
+        `;
+
+
+
+        table.appendChild(tr);
+
+
+
+
+
+        if(
+        typeof data.x==="number"
+        &&
+        typeof data.y==="number"
+        ){
+
+
+            createMarker(
+                data.x,
+                data.y,
+                data.result
+            );
+
+
+        }
+
+
+
+    });
+
+
+
+
+
+
+    // ==================
+    // 削除処理
+    // ==================
+
+
+    document
+    .querySelectorAll(".deleteBtn")
+    .forEach(button=>{
+
+
+        button.addEventListener(
+        "click",
+        async()=>{
+
+
+            if(
+            !confirm(
+            "この記録を削除しますか？"
+            )
+            )
+            return;
+
+
+
+            await deleteDoc(
+
+                doc(
+                    db,
+                    "match",
+                    button.dataset.id
+                )
+
+            );
+
+
+        });
+
+
+    });
+
+
+
+});
