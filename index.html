@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>水球アナリストシステム</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<h1>🏊 水球アナリストシステム</h1>
+
+</header>
+
+<div class="menu">
+
+<a href="player.html">
+
+<div class="card">
+
+<h2>👤 選手管理</h2>
+
+<p>
+
+選手の追加・編集・削除
+
+</p>
+
+</div>
+
+</a>
+
+<a href="practice.html">
+
+<div class="card">
+
+<h2>🏀 練習シュート記録</h2>
+
+<p>
+
+練習の成功率を記録
+
+</p>
+
+</div>
+
+</a>
+
+<a href="match.html">
+
+<div class="card">
+
+<h2>🎯 試合シュート位置</h2>
+
+<p>
+
+コートをクリックして記録
+
+</p>
+
+</div>
+
+</a>
+
+<a href="analysis.html">
+
+<div class="card">
+
+<h2>📈 分析画面</h2>
+
+<p>
+
+成功率・ヒートマップ
+
+</p>
+
+
+</div>
+
+</a>
+
+</div>
+<button onclick="deleteAllData()">
+
+⚠ テストデータ削除
+
+</button>
+
+</body>
+
+</html>
+
+<script>
+    function deleteAllData(){
+
+
+let result = confirm(
+"全ての記録データを削除しますか？"
+);
+
+
+if(result){
+
+
+localStorage.removeItem("players");
+
+
+localStorage.removeItem("practices");
+
+
+localStorage.removeItem("matches");
+
+
+
+alert("データを削除しました");
+
+
+location.reload();
+
+
+}
+
+
+}
+</script>

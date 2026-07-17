@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>試合シュート位置記録</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+
+<style>
+
+.container{
+
+width:1000px;
+
+margin:auto;
+
+padding:30px;
+
+}
+
+
+#court{
+
+position:relative;
+
+width:900px;
+
+height:450px;
+
+margin:20px auto;
+
+background:#4FC3F7;
+
+border:5px solid white;
+
+box-shadow:0 0 10px gray;
+
+cursor:crosshair;
+
+}
+
+
+/* センターライン */
+
+#line{
+
+position:absolute;
+
+left:50%;
+
+top:0;
+
+width:3px;
+
+height:100%;
+
+background:white;
+
+}
+
+
+
+/* ゴール */
+
+.goal{
+
+position:absolute;
+
+width:12px;
+
+height:100px;
+
+background:red;
+
+top:175px;
+
+}
+
+
+#leftGoal{
+
+left:0;
+
+}
+
+
+#rightGoal{
+
+right:0;
+
+}
+
+
+
+/* シュートマーク */
+
+.marker{
+
+position:absolute;
+
+width:18px;
+
+height:18px;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
+border:2px solid white;
+
+}
+
+
+.goalShot{
+
+background:#00cc00;
+
+}
+
+
+.missShot{
+
+background:#ff0000;
+
+}
+
+
+.gkShot{
+
+background:#ffcc00;
+
+}
+
+
+
+input,select{
+
+padding:10px;
+
+margin:5px;
+
+font-size:16px;
+
+}
+
+
+
+button{
+
+padding:10px 20px;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+
+
+table{
+
+width:100%;
+
+margin-top:30px;
+
+border-collapse:collapse;
+
+background:white;
+
+}
+
+
+
+th,td{
+
+border:1px solid #999;
+
+padding:10px;
+
+text-align:center;
+
+}
+
+
+
+th{
+
+background:#003366;
+
+color:white;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>🏊 試合シュート位置記録</h1>
+
+</header>
+
+
+
+<div class="container">
+
+
+
+<h2>試合記録</h2>
+
+
+
+<select id="player">
+
+</select>
+
+
+
+<select id="period">
+
+<option>1Q</option>
+
+<option>2Q</option>
+
+<option>3Q</option>
+
+<option>4Q</option>
+
+</select>
+
+
+
+<select id="shotType">
+
+<option>通常シュート</option>
+
+<option>速攻</option>
+
+<option>センター</option>
+
+<option>5mシュート</option>
+
+<option>カウンター</option>
+
+</select>
+
+
+
+<select id="result">
+
+<option value="goal">
+ゴール
+</option>
+
+<option value="miss">
+外れ
+</option>
+
+<option value="gk">
+GKセーブ
+</option>
+
+</select>
+
+
+
+<br>
+
+
+<div id="court">
+
+
+<div id="line"></div>
+
+<div class="goal" id="leftGoal"></div>
+
+<div class="goal" id="rightGoal"></div>
+
+
+</div>
+
+
+
+<p id="position">
+
+コートをクリックしてください
+
+</p>
+
+
+
+<button onclick="saveMatch()">
+
+登録
+
+</button>
+
+<button onclick="exportExcel()">
+
+Excel出力
+
+</button>
+
+
+<h2>
+
+記録一覧
+
+</h2>
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>選手</th>
+
+<th>Q</th>
+
+<th>種類</th>
+
+<th>結果</th>
+
+<th>X</th>
+
+<th>Y</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="matchTable">
+
+</tbody>
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+<script>
+// =====================
+// 選手読み込み
+// =====================
+
+const players =
+JSON.parse(localStorage.getItem("players")) || [];
+
+
+const playerSelect =
+document.getElementById("player");
+
+
+players.forEach(p=>{
+
+const option =
+document.createElement("option");
+
+option.value=p.name;
+
+option.textContent=
+p.number+" "+p.name;
+
+playerSelect.appendChild(option);
+
+});
+
+
+
+// =====================
+// シュートデータ読み込み
+// =====================
+
+let matches =
+JSON.parse(localStorage.getItem("matches")) || [];
+
+
+
+// 初期表示
+
+showMatch();
+
+
+
+// =====================
+// コートクリック
+// =====================
+
+let x=0;
+
+let y=0;
+
+
+const court =
+document.getElementById("court");
+
+
+court.addEventListener("click",function(e){
+
+
+const rect =
+court.getBoundingClientRect();
+
+
+x =
+e.clientX - rect.left;
+
+
+y =
+e.clientY - rect.top;
+
+
+
+document.getElementById("position").innerHTML =
+
+"位置 X:"
++Math.round(x)
++" Y:"
++Math.round(y);
+
+
+
+});
+
+
+
+
+// =====================
+// 登録
+// =====================
+
+function saveMatch(){
+
+
+const player =
+document.getElementById("player").value;
+
+
+const period =
+document.getElementById("period").value;
+
+
+const shotType =
+document.getElementById("shotType").value;
+
+
+const result =
+document.getElementById("result").value;
+
+
+
+if(players.length==0){
+
+alert("選手登録してください");
+
+return;
+
+}
+
+
+
+// データ保存
+
+let area=getArea(x,y);
+
+
+matches.push({
+
+player:player,
+
+period:period,
+
+shotType:shotType,
+
+result:result,
+
+x:Math.round(x),
+
+y:Math.round(y),
+
+area:area
+
+});
+
+
+
+// localStorage保存
+
+localStorage.setItem(
+
+"matches",
+
+JSON.stringify(matches)
+
+);
+
+
+
+
+// マーカー表示
+
+createMarker(
+x,
+y,
+result
+);
+
+
+
+// 表更新
+
+showMatch();
+
+
+}
+
+
+
+// =====================
+// マーカー作成
+// =====================
+
+function createMarker(x,y,result){
+
+
+const marker =
+document.createElement("div");
+
+
+marker.classList.add("marker");
+
+
+
+if(result=="goal")
+marker.classList.add("goalShot");
+
+
+if(result=="miss")
+marker.classList.add("missShot");
+
+
+if(result=="gk")
+marker.classList.add("gkShot");
+
+
+
+marker.style.left=x+"px";
+
+marker.style.top=y+"px";
+
+
+court.appendChild(marker);
+
+
+}
+
+
+
+// =====================
+// 表表示
+// =====================
+
+function showMatch(){
+
+
+let html="";
+
+
+matches.forEach(m=>{
+
+
+let result="";
+
+
+if(m.result=="goal")
+result="ゴール";
+
+
+if(m.result=="miss")
+result="外れ";
+
+
+if(m.result=="gk")
+result="GK";
+
+
+
+html+=`
+
+<tr>
+
+<td>${m.player}</td>
+
+<td>${m.period}</td>
+
+<td>${m.shotType}</td>
+
+<td>${result}</td>
+
+<td>${m.x}</td>
+
+<td>${m.y}</td>
+
+</tr>
+
+`;
+
+
+
+});
+
+
+
+document.getElementById("matchTable").innerHTML=html;
+
+
+
+}
+// =====================
+// Excel(CSV)出力
+// =====================
+
+function exportExcel(){
+
+
+if(matches.length==0){
+
+alert("記録データがありません");
+
+return;
+
+}
+
+
+
+// CSVヘッダー
+
+let csv =
+
+"選手,ピリオド,シュート種類,結果,X座標,Y座標\n";
+
+
+
+
+// データ追加
+
+matches.forEach(m=>{
+
+
+let result="";
+
+
+if(m.result=="goal")
+result="ゴール";
+
+
+if(m.result=="miss")
+result="外れ";
+
+
+if(m.result=="gk")
+result="GKセーブ";
+
+
+
+csv +=
+
+`${m.player},${m.period},${m.shotType},${result},${m.x},${m.y}\n`;
+
+
+});
+
+
+
+
+// UTF-8(BOM付き)
+
+const bom =
+new Uint8Array([0xEF,0xBB,0xBF]);
+
+
+
+const blob =
+new Blob(
+[bom,csv],
+{type:"text/csv"}
+);
+
+
+
+
+// ダウンロード
+
+const url =
+URL.createObjectURL(blob);
+
+
+const a =
+document.createElement("a");
+
+
+a.href=url;
+
+
+a.download="水球試合シュート記録.csv";
+
+
+a.click();
+
+
+
+URL.revokeObjectURL(url);
+
+
+
+}
+function getArea(x,y){
+
+
+if(x<300){
+
+return "左サイド";
+
+}
+
+
+if(x>600){
+
+return "右サイド";
+
+}
+
+
+if(y<150){
+
+return "正面上";
+
+}
+
+
+if(y>300){
+
+return "正面下";
+
+}
+
+
+return "中央";
+
+}
+
+</script>
+
+
+
+</body>
+
+</html>
