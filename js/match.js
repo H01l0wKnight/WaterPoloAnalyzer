@@ -1,29 +1,32 @@
-let selectedX = 0;
-let selectedY = 0;
+let x = 0;
+let y = 0;
 
 
-// 選手読み込み
+//選手読み込み
 
 window.onload=function(){
 
 
 let players =
-JSON.parse(localStorage.getItem("players")) || [];
+JSON.parse(localStorage.getItem("players"))
+||[];
+
 
 
 let select =
-document.getElementById("playerSelect");
+document.getElementById("player");
 
 
 
-players.forEach(player=>{
+players.forEach(p=>{
 
 
 let option=document.createElement("option");
 
-option.value=player.name;
 
-option.textContent=player.name;
+option.value=p.name;
+
+option.textContent=p.name;
 
 
 select.appendChild(option);
@@ -32,7 +35,8 @@ select.appendChild(option);
 });
 
 
-displayRecords();
+
+loadRecords();
 
 
 }
@@ -40,7 +44,8 @@ displayRecords();
 
 
 
-// コートクリック
+
+//コートクリック
 
 document.getElementById("court")
 .onclick=function(e){
@@ -49,18 +54,21 @@ document.getElementById("court")
 let rect=this.getBoundingClientRect();
 
 
-selectedX=e.clientX-rect.left;
 
-selectedY=e.clientY-rect.top;
+x=e.clientX-rect.left;
+
+y=e.clientY-rect.top;
 
 
 
-alert(
-"位置登録しました\nX:"
-+Math.round(selectedX)
+document.getElementById("position").innerHTML=
+
+
+"位置 X:"
++Math.round(x)
 +" Y:"
-+Math.round(selectedY)
-);
++Math.round(y);
+
 
 
 };
@@ -69,36 +77,16 @@ alert(
 
 
 
-// 成功ボタン
 
-document.getElementById("goalBtn")
+//保存
+
+document.getElementById("saveBtn")
 .onclick=function(){
-
-saveShot(true);
-
-};
-
-
-
-// 失敗ボタン
-
-document.getElementById("missBtn")
-.onclick=function(){
-
-saveShot(false);
-
-};
-
-
-
-
-
-function saveShot(result){
 
 
 
 let player=
-document.getElementById("playerSelect").value;
+document.getElementById("player").value;
 
 
 
@@ -112,103 +100,127 @@ return;
 
 
 
-let data=JSON.parse(
-localStorage.getItem("matchShots")
-)||[];
+
+let records=
+JSON.parse(localStorage.getItem("matchRecords"))
+||[];
 
 
 
-let shot={
 
+let data={
 
-player:player,
 
 quarter:
 document.getElementById("quarter").value,
 
 
 time:
-document.getElementById("gameTime").value,
+document.getElementById("time").value,
 
 
-type:
-document.getElementById("shotType").value,
+player:player,
+
+
+menu:
+document.getElementById("menu").value,
 
 
 result:
-result ? "成功":"失敗",
+document.getElementById("result").value,
 
 
-x:selectedX,
+x:x,
 
-y:selectedY
+
+y:y
+
 
 
 };
 
 
 
-data.push(shot);
+records.push(data);
 
 
 
 localStorage.setItem(
-"matchShots",
-JSON.stringify(data)
+"matchRecords",
+JSON.stringify(records)
 );
 
 
 
-alert("保存しました");
-
-
-displayRecords();
+loadRecords();
 
 
 
-}
+};
 
 
 
 
 
-function displayRecords(){
 
-
-let list=
-document.getElementById("recordList");
-
-
-list.innerHTML="";
+function loadRecords(){
 
 
 
-let data=
-JSON.parse(localStorage.getItem("matchShots"))
+let table=
+document.getElementById("matchTable");
+
+table.innerHTML="";
+
+
+
+let records=
+JSON.parse(localStorage.getItem("matchRecords"))
 ||[];
 
 
 
-data.forEach(s=>{
+
+
+records.forEach((r,index)=>{
 
 
 let tr=document.createElement("tr");
 
 
 
-tr.innerHTML=
+tr.innerHTML=`
 
-`
-<td>${s.player}</td>
-<td>${s.quarter}</td>
-<td>${s.time}</td>
-<td>${s.type}</td>
-<td>${s.result}</td>
+<td>${r.quarter}</td>
+
+<td>${r.time}</td>
+
+<td>${r.player}</td>
+
+<td>${r.menu}</td>
+
+<td>${r.result}</td>
+
+<td>
+(${Math.round(r.x)},${Math.round(r.y)})
+</td>
+
+<td>
+
+<button onclick="deleteRecord(${index})">
+
+削除
+
+</button>
+
+</td>
+
 `;
 
 
 
-list.appendChild(tr);
+table.appendChild(tr);
+
 
 
 });
@@ -216,3 +228,32 @@ list.appendChild(tr);
 
 
 }
+
+
+
+
+window.deleteRecord=function(index){
+
+
+let records=
+JSON.parse(localStorage.getItem("matchRecords"))
+||[];
+
+
+
+records.splice(index,1);
+
+
+
+localStorage.setItem(
+"matchRecords",
+JSON.stringify(records)
+);
+
+
+
+loadRecords();
+
+
+
+};
