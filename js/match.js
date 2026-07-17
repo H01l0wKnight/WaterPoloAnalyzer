@@ -202,7 +202,7 @@ function getArea(x,y){
 
     // 上側を右サイド
 
-    if(y < 150){
+    if(y < 255){
 
         return "右";
 
@@ -212,7 +212,7 @@ function getArea(x,y){
 
     // 下側を左サイド
 
-    if(y > 300){
+    if(y > 255){
 
         return "左";
 
