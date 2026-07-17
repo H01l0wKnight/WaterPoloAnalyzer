@@ -2,153 +2,160 @@ import { db } from "./firebase.js";
 
 import {
     collection,
-    getDocs,
     addDoc,
+    getDocs,
     deleteDoc,
     doc,
-    serverTimestamp,
     onSnapshot,
-    query,
-    orderBy
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-
-// ==========================
-// HTML取得
-// ==========================
-
-const playerSelect = document.getElementById("player");
-const dateInput = document.getElementById("date");
-const court = document.getElementById("court");
-const positionText = document.getElementById("position");
-const saveBtn = document.getElementById("saveBtn");
-
-// ==========================
-// 今日の日付
-// ==========================
-
-const today = new Date();
-dateInput.value = today.toISOString().split("T")[0];
 
 // ==========================
 // Firestore
 // ==========================
 
-const playersRef = collection(db, "players");
+const playerRef = collection(db, "players");
 const practiceRef = collection(db, "practice");
 
 // ==========================
-// クリック座標
+// HTML
 // ==========================
 
-let clickX = null;
-let clickY = null;
+const playerSelect = document.getElementById("player");
+const dateInput = document.getElementById("date");
+const menuSelect = document.getElementById("menu");
+const resultSelect = document.getElementById("result");
+const saveBtn = document.getElementById("saveBtn");
+
+const table = document.getElementById("practiceTable");
+
+const court = document.getElementById("court");
+
+const positionText = document.getElementById("position");
+
+// 今日の日付
+
+dateInput.valueAsDate = new Date();
+
+// ==========================
+// 選手読込
+// ==========================
+
+async function loadPlayers() {
+
+    playerSelect.innerHTML =
+        '<option value="">選手を選択</option>';
+
+    const snapshot = await getDocs(playerRef);
+
+    snapshot.forEach((docSnap) => {
+
+        const p = docSnap.data();
+
+        const option = document.createElement("option");
+
+        option.value = p.name;
+
+        option.textContent =
+            p.number + "  " + p.name;
+
+        playerSelect.appendChild(option);
+
+    });
+
+}
+
+loadPlayers();
 
 // ==========================
 // コートクリック
 // ==========================
 
+let clickX = 0;
+let clickY = 0;
+
 court.addEventListener("click", (e) => {
 
     const rect = court.getBoundingClientRect();
 
-    clickX = e.clientX - rect.left;
-    clickY = e.clientY - rect.top;
+    clickX = Math.round(e.clientX - rect.left);
+
+    clickY = Math.round(e.clientY - rect.top);
 
     positionText.textContent =
-        `X:${Math.round(clickX)}  Y:${Math.round(clickY)}`;
+        "X : " + clickX +
+        "   Y : " + clickY;
 
-    // 古いマーカー削除
-    const oldMarker = document.querySelector(".tempMarker");
+});
 
-    if (oldMarker) {
-        oldMarker.remove();
-    }
+// ==========================
+// エリア判定
+// ==========================
 
-    // 新しいマーカー
+function getArea(x, y) {
+
+    if (x < 300)
+        return "左";
+
+    if (x > 600)
+        return "右";
+
+    if (y < 150)
+        return "上";
+
+    if (y > 300)
+        return "下";
+
+    return "中央";
+
+}
+// ==========================
+// マーカー表示
+// ==========================
+
+function createMarker(x, y, result) {
+
     const marker = document.createElement("div");
 
-    marker.className = "marker tempMarker";
+    marker.classList.add("marker");
 
-    const result = document.getElementById("result").value;
-
-    if(result==="goal"){
+    if (result == "goal") {
 
         marker.classList.add("goalShot");
 
-    }else if(result==="miss"){
+    } else if (result == "miss") {
 
         marker.classList.add("missShot");
 
-    }else{
+    } else {
 
         marker.classList.add("gkShot");
 
     }
 
-    marker.style.left = clickX + "px";
-    marker.style.top = clickY + "px";
+    marker.style.left = x + "px";
+
+    marker.style.top = y + "px";
 
     court.appendChild(marker);
-
-});
-
-// ==========================
-// 選手読み込み
-// ==========================
-
-async function loadPlayers(){
-
-    playerSelect.innerHTML="";
-
-    try{
-
-        const snapshot = await getDocs(playersRef);
-
-        if(snapshot.empty){
-
-            playerSelect.innerHTML =
-            "<option>選手が登録されていません</option>";
-
-            return;
-
-        }
-
-        snapshot.forEach((doc)=>{
-
-            const player = doc.data();
-
-            const option = document.createElement("option");
-
-            option.value = doc.id;
-
-            option.textContent =
-                `${player.number} ${player.name} (${player.position})`;
-
-            playerSelect.appendChild(option);
-
-        });
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-        alert("選手の取得に失敗しました");
-
-    }
 
 }
 
 // ==========================
-// 練習記録保存
+// 登録
 // ==========================
 
-saveBtn.addEventListener("click", savePractice);
+saveBtn.addEventListener("click", async () => {
 
-async function savePractice(){
+    if (playerSelect.value == "") {
 
-    if(clickX===null || clickY===null){
+        alert("選手を選択してください");
+
+        return;
+
+    }
+
+    if (clickX == 0 && clickY == 0) {
 
         alert("コートをクリックしてください");
 
@@ -156,211 +163,164 @@ async function savePractice(){
 
     }
 
-    const playerId = playerSelect.value;
+    const data = {
 
-    const playerName =
-        playerSelect.options[playerSelect.selectedIndex].text;
+        player: playerSelect.value,
 
-    const date = dateInput.value;
+        date: dateInput.value,
 
-    const menu =
-        document.getElementById("menu").value;
+        menu: menuSelect.value,
 
-    const result =
-        document.getElementById("result").value;
+        result: resultSelect.value,
 
-    try{
+        x: clickX,
 
-        await addDoc(practiceRef,{
+        y: clickY,
 
-            playerId,
-            playerName,
-            date,
-            menu,
-            result,
-            x:Math.round(clickX),
-            y:Math.round(clickY),
-            createdAt:serverTimestamp()
+        area: getArea(clickX, clickY),
 
-        });
+        createdAt: serverTimestamp()
 
-        alert("登録しました！");
+    };
+
+    await addDoc(practiceRef, data);
+
+    createMarker(
+
+        clickX,
+
+        clickY,
+
+        resultSelect.value
+
+    );
+
+    alert("登録しました");
+
+});
+
+// ==========================
+// 記録一覧
+// ==========================
+
+function resultText(result) {
+
+    switch (result) {
+
+        case "goal":
+
+            return "ゴール";
+
+        case "miss":
+
+            return "外れ";
+
+        case "gk":
+
+            return "GKセーブ";
+
+        default:
+
+            return result;
 
     }
-    clickX = null;
-clickY = null;
-
-positionText.textContent =
-"コートをクリックしてください";
-
-const marker =
-document.querySelector(".tempMarker");
-
-if(marker){
-
-    marker.remove();
 
 }
-
-    catch(error){
-
-        console.error(error);
-
-        alert("保存に失敗しました");
-
-    }
-
-}
-
 // ==========================
-// 初期処理
+// 一覧表示
 // ==========================
 
-loadPlayers();
-// ==========================
-// 練習一覧
-// ==========================
+onSnapshot(practiceRef, (snapshot) => {
 
-const table = document.getElementById("practiceTable");
+    table.innerHTML = "";
 
-const practiceQuery = query(
-    practiceRef,
-    orderBy("createdAt","desc")
-);
+    // 以前のマーカーを削除
+    document.querySelectorAll(".marker").forEach(marker => {
+        marker.remove();
+    });
 
-onSnapshot(practiceQuery,(snapshot)=>{
+    snapshot.forEach((docSnap) => {
 
-    table.innerHTML="";
+        const data = docSnap.data();
 
-    snapshot.forEach((doc)=>{
+        // ----- 表 -----
 
-        const data = doc.data();
+        const tr = document.createElement("tr");
 
-        let result="";
+        tr.innerHTML = `
 
-        switch(data.result){
+            <td>${data.date ?? ""}</td>
 
-            case "goal":
+            <td>${data.player}</td>
 
-                result="ゴール";
+            <td>${data.menu}</td>
 
-                break;
+            <td>${resultText(data.result)}</td>
 
-            case "miss":
+            <td>${data.area}</td>
 
-                result="外れ";
+            <td>
 
-                break;
+                <button class="deleteBtn" data-id="${docSnap.id}">
 
-            case "gk":
+                    削除
 
-                result="GKセーブ";
+                </button>
 
-                break;
+            </td>
+
+        `;
+
+        table.appendChild(tr);
+
+        // ----- コートへマーカー表示 -----
+
+        if (typeof data.x === "number" && typeof data.y === "number") {
+
+            createMarker(
+
+                data.x,
+
+                data.y,
+
+                data.result
+
+            );
 
         }
 
-        table.innerHTML +=`
-
-<tr>
-
-<td>${data.date}</td>
-
-<td>${data.playerName}</td>
-
-<td>${data.menu}</td>
-
-<td>${result}</td>
-
-</tr>
-
-`;
-
     });
 
-});
-const table = document.getElementById("practiceTable");
+    // ==========================
+    // 削除ボタン
+    // ==========================
 
-const practiceQuery = query(
-    practiceRef,
-    orderBy("createdAt","desc")
-);
+    document.querySelectorAll(".deleteBtn").forEach(button => {
 
-onSnapshot(practiceQuery,(snapshot)=>{
+        button.addEventListener("click", async () => {
 
-    table.innerHTML="";
+            if (!confirm("この記録を削除しますか？")) {
 
-    // コート上のマーカー削除
-    document.querySelectorAll(".savedMarker")
-        .forEach(m=>m.remove());
+                return;
 
-    snapshot.forEach((item)=>{
+            }
 
-        const data = item.data();
+            await deleteDoc(
 
-        let resultText="";
+                doc(
 
-        if(data.result==="goal") resultText="ゴール";
-        if(data.result==="miss") resultText="外れ";
-        if(data.result==="gk") resultText="GKセーブ";
+                    db,
 
-        // ===== 表 =====
+                    "practice",
 
-        table.innerHTML += `
-        <tr>
-            <td>${data.date}</td>
-            <td>${data.playerName}</td>
-            <td>${data.menu}</td>
-            <td>${resultText}</td>
-            <td>
-                <button class="deleteBtn"
-                    data-id="${item.id}">
-                    🗑
-                </button>
-            </td>
-        </tr>
-        `;
+                    button.dataset.id
 
-        // ===== コートへ表示 =====
+                )
 
-        const marker=document.createElement("div");
-
-        marker.classList.add("marker");
-        marker.classList.add("savedMarker");
-
-        if(data.result==="goal")
-            marker.classList.add("goalShot");
-
-        if(data.result==="miss")
-            marker.classList.add("missShot");
-
-        if(data.result==="gk")
-            marker.classList.add("gkShot");
-
-        marker.style.left=data.x+"px";
-        marker.style.top=data.y+"px";
-
-        court.appendChild(marker);
-
-    });
-
-    // 削除イベント
-
-    document.querySelectorAll(".deleteBtn")
-        .forEach(button=>{
-
-            button.addEventListener("click",async()=>{
-
-                if(confirm("削除しますか？")){
-
-                    await deleteDoc(
-                        doc(db,"practice",button.dataset.id)
-                    );
-
-                }
-
-            });
+            );
 
         });
+
+    });
 
 });
