@@ -4,80 +4,12 @@
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>選手管理</title>
 
-<link rel="stylesheet" href="css/style.css">
-
-<style>
-
-.container{
-
-width:900px;
-
-margin:auto;
-
-padding:30px;
-
-}
-
-input,select{
-
-padding:10px;
-
-margin:5px;
-
-font-size:16px;
-
-}
-
-button{
-
-padding:10px 20px;
-
-font-size:16px;
-
-cursor:pointer;
-
-}
-
-table{
-
-width:100%;
-
-margin-top:20px;
-
-border-collapse:collapse;
-
-background:white;
-
-}
-
-th,td{
-
-border:1px solid #999;
-
-padding:10px;
-
-text-align:center;
-
-}
-
-th{
-
-background:#003366;
-
-color:white;
-
-}
-
-.back{
-
-margin-top:30px;
-
-}
-
-</style>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/player.css">
 
 </head>
 
@@ -89,7 +21,9 @@ margin-top:30px;
 
 </header>
 
-<div class="container">
+<main>
+
+<div class="form">
 
 <input
 type="number"
@@ -105,29 +39,17 @@ placeholder="名前">
 
 <option>GK</option>
 
-<option>CF</option>
-
-<option>Driver</option>
-
-<option>Wing</option>
-
-<option>Point</option>
+<option>FP</option>
 
 </select>
 
-<select id="hand">
+<button id="addBtn">
 
-<option>右</option>
-
-<option>左</option>
-
-</select>
-
-<button onclick="addPlayer()">
-
-登録
+＋選手追加
 
 </button>
+
+</div>
 
 <table>
 
@@ -135,13 +57,11 @@ placeholder="名前">
 
 <tr>
 
-<th>背番号</th>
+<th>No</th>
 
 <th>名前</th>
 
 <th>ポジション</th>
-
-<th>利き手</th>
 
 <th>削除</th>
 
@@ -155,135 +75,19 @@ placeholder="名前">
 
 </table>
 
-<div class="back">
-
 <a href="index.html">
 
-<button>ホームへ戻る</button>
+<button class="homeButton">
 
-</a>
-
-</div>
-
-</div>
-
-<script>
-
-let players=[];
-
-if(localStorage.getItem("players")){
-
-players=
-JSON.parse(localStorage.getItem("players"));
-
-showPlayers();
-
-}
-
-function addPlayer(){
-
-const number=
-document.getElementById("number").value;
-
-const name=
-document.getElementById("name").value;
-
-const position=
-document.getElementById("position").value;
-
-const hand=
-document.getElementById("hand").value;
-
-if(number==""||name==""){
-
-alert("入力してください");
-
-return;
-
-}
-
-players.push({
-
-number:number,
-
-name:name,
-
-position:position,
-
-hand:hand
-
-});
-
-localStorage.setItem(
-
-"players",
-
-JSON.stringify(players)
-
-);
-
-showPlayers();
-
-document.getElementById("number").value="";
-document.getElementById("name").value="";
-
-}
-
-function showPlayers(){
-
-let html="";
-
-players.forEach(function(p,index){
-
-html+=`
-
-<tr>
-
-<td>${p.number}</td>
-
-<td>${p.name}</td>
-
-<td>${p.position}</td>
-
-<td>${p.hand}</td>
-
-<td>
-
-<button onclick="deletePlayer(${index})">
-
-削除
+🏠 ホームへ戻る
 
 </button>
 
-</td>
+</a>
 
-</tr>
+</main>
 
-`;
-
-});
-
-document.getElementById("playerTable").innerHTML=html;
-
-}
-
-function deletePlayer(index){
-
-players.splice(index,1);
-
-localStorage.setItem(
-
-"players",
-
-JSON.stringify(players)
-
-);
-
-showPlayers();
-
-}
-
-</script>
+<script type="module" src="js/player.js"></script>
 
 </body>
 
