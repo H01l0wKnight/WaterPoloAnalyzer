@@ -2,154 +2,97 @@
 <html lang="ja">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>試合記録 | WaterPolo Analyzer</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>試合記録 | WaterPolo Analyzer</title>
-
-<link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/match.css">
-
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/match.css">
 </head>
 
 <body>
 
 <header>
-
-<h1>🏆 試合シュート記録</h1>
-
+    <h1>🏊 試合シュート記録</h1>
 </header>
 
 <main>
 
-<div class="control">
+    <section class="control">
 
-<select id="player">
-<option value="">選手を選択</option>
-</select>
+        <select id="player">
+            <option value="">選手を選択</option>
+        </select>
 
-<input type="date" id="date">
+        <input type="date" id="date">
 
-<select id="period">
+        <select id="quarter">
+            <option value="1Q">1Q</option>
+            <option value="2Q">2Q</option>
+            <option value="3Q">3Q</option>
+            <option value="4Q">4Q</option>
+        </select>
 
-<option value="1Q">1Q</option>
-<option value="2Q">2Q</option>
-<option value="3Q">3Q</option>
-<option value="4Q">4Q</option>
+        <input type="time" id="time">
 
-</select>
+        <select id="menu">
+            <option value="通常シュート">通常シュート</option>
+            <option value="速攻">速攻</option>
+            <option value="センター">センター</option>
+            <option value="5mシュート">5mシュート</option>
+            <option value="ペナルティ">ペナルティ</option>
+        </select>
 
-<input
-type="time"
-id="gameTime"
-step="1"
-value="00:00">
+        <select id="result">
+            <option value="goal">ゴール</option>
+            <option value="miss">外れ</option>
+            <option value="gk">GKセーブ</option>
+        </select>
 
-<select id="shotType">
+        <button id="saveBtn">登録</button>
 
-<option value="通常シュート">通常シュート</option>
-<option value="速攻">速攻</option>
-<option value="センター">センター</option>
-<option value="5mシュート">5mシュート</option>
-<option value="カウンター">カウンター</option>
+    </section>
 
-</select>
+    <h2>シュート位置</h2>
 
-<select id="result">
+    <div id="court">
+        <div class="centerLine"></div>
+        <div class="goal leftGoal"></div>
+        <div class="goal rightGoal"></div>
+    </div>
 
-<option value="goal">ゴール</option>
+    <p id="position">
+        コートをクリックしてください
+    </p>
 
-<option value="miss">外れ</option>
+    <h2>試合記録一覧</h2>
 
-<option value="gk">GKセーブ</option>
+    <table>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>Q</th>
+                <th>時間</th>
+                <th>選手</th>
+                <th>シュート</th>
+                <th>結果</th>
+                <th>位置</th>
+                <th>削除</th>
+            </tr>
+        </thead>
 
-</select>
+        <tbody id="matchTable"></tbody>
+    </table>
 
-<button id="saveBtn">
+    <br>
 
-登録
-
-</button>
-
-</div>
-
-<h2>
-
-シュート位置
-
-</h2>
-
-<div id="court">
-
-<div class="centerLine"></div>
-
-<div class="goal leftGoal"></div>
-
-<div class="goal rightGoal"></div>
-
-</div>
-
-<p id="position">
-
-コートをクリックしてください
-
-</p>
-
-<h2>
-
-試合記録一覧
-
-</h2>
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>日付</th>
-
-<th>選手</th>
-
-<th>Q</th>
-
-<th>時間</th>
-
-<th>種類</th>
-
-<th>結果</th>
-
-<th>エリア</th>
-
-<th>削除</th>
-
-</tr>
-
-</thead>
-
-<tbody id="matchTable">
-
-</tbody>
-
-</table>
-
-<br>
-
-<a href="index.html">
-
-<button>
-
-🏠 ホームへ戻る
-
-</button>
-
-</a>
+    <a href="index.html">
+        <button>🏠 ホームへ戻る</button>
+    </a>
 
 </main>
 
 <script type="module" src="js/match.js"></script>
 
 </body>
-
 </html>
