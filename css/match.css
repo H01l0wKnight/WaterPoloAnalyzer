@@ -8,8 +8,6 @@ main{
 
 }
 
-
-
 .control{
 
     display:flex;
@@ -24,8 +22,6 @@ main{
 
 }
 
-
-
 .control select,
 .control input,
 .control button{
@@ -34,13 +30,11 @@ main{
 
     font-size:16px;
 
-    border-radius:8px;
-
     border:1px solid #ccc;
 
+    border-radius:8px;
+
 }
-
-
 
 .control button{
 
@@ -52,24 +46,15 @@ main{
 
     cursor:pointer;
 
-    transition:.3s;
+    transition:0.3s;
 
 }
-
-
 
 .control button:hover{
 
     background:#0055aa;
 
 }
-
-
-
-/* ====================
-   水球コート
-==================== */
-
 
 #court{
 
@@ -89,13 +74,7 @@ main{
 
     cursor:crosshair;
 
-    overflow:hidden;
-
 }
-
-
-
-/* センターライン */
 
 .centerLine{
 
@@ -113,10 +92,6 @@ main{
 
 }
 
-
-
-/* ゴール */
-
 .goal{
 
     position:absolute;
@@ -131,30 +106,17 @@ main{
 
 }
 
-
-
 .leftGoal{
 
     left:0;
 
 }
 
-
-
 .rightGoal{
 
     right:0;
 
 }
-
-
-
-
-
-/* ====================
-   シュートマーカー
-==================== */
-
 
 .marker{
 
@@ -170,11 +132,7 @@ main{
 
     border:2px solid white;
 
-    z-index:10;
-
 }
-
-
 
 .goalShot{
 
@@ -182,15 +140,11 @@ main{
 
 }
 
-
-
 .missShot{
 
     background:#ff0000;
 
 }
-
-
 
 .gkShot{
 
@@ -198,28 +152,17 @@ main{
 
 }
 
-
-
-
-
-/* ====================
-   表
-==================== */
-
-
 table{
 
     width:100%;
 
-    border-collapse:collapse;
-
     margin-top:30px;
+
+    border-collapse:collapse;
 
     background:white;
 
 }
-
-
 
 th,td{
 
@@ -231,8 +174,6 @@ th,td{
 
 }
 
-
-
 th{
 
     background:#003366;
@@ -241,20 +182,15 @@ th{
 
 }
 
-
-
-
-/* 削除 */
-
 .deleteBtn{
 
-    background:red;
+    background:#cc0000;
 
     color:white;
 
     border:none;
 
-    padding:8px 12px;
+    padding:6px 12px;
 
     border-radius:5px;
 
@@ -262,17 +198,11 @@ th{
 
 }
 
-
-
 .deleteBtn:hover{
 
-    background:#cc0000;
+    background:#990000;
 
 }
-
-
-
-
 
 #position{
 
@@ -280,18 +210,13 @@ th{
 
     font-size:18px;
 
-    margin-top:20px;
-
     color:#003366;
+
+    margin-top:20px;
 
 }
 
-
-
-
-
 @media(max-width:950px){
-
 
 #court{
 
@@ -301,5 +226,20 @@ th{
 
 }
 
+.control{
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.control select,
+.control input,
+.control button{
+
+    width:250px;
+
+}
 
 }
