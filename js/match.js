@@ -13,36 +13,30 @@ import {
 // ==========================
 // Firestore
 // ==========================
-
 const playerRef = collection(db, "players");
 const matchRef = collection(db, "match");
 
 // ==========================
 // HTML
 // ==========================
-
 const playerSelect = document.getElementById("player");
 const dateInput = document.getElementById("date");
-const periodSelect = document.getElementById("period");
-const gameTimeInput = document.getElementById("gameTime");
-const shotTypeSelect = document.getElementById("shotType");
+const quarterSelect = document.getElementById("quarter");
+const timeInput = document.getElementById("time");
+const menuSelect = document.getElementById("menu");
 const resultSelect = document.getElementById("result");
 const saveBtn = document.getElementById("saveBtn");
 
 const table = document.getElementById("matchTable");
-
 const court = document.getElementById("court");
-
 const positionText = document.getElementById("position");
 
 // 今日の日付
-
 dateInput.valueAsDate = new Date();
 
 // ==========================
-// 選手読込
+// 選手読み込み
 // ==========================
-
 async function loadPlayers() {
 
     playerSelect.innerHTML =
@@ -52,14 +46,13 @@ async function loadPlayers() {
 
     snapshot.forEach((docSnap) => {
 
-        const player = docSnap.data();
+        const p = docSnap.data();
 
         const option = document.createElement("option");
 
-        option.value = player.name;
-
+        option.value = p.name;
         option.textContent =
-            player.number + " " + player.name;
+            p.number + "  " + p.name;
 
         playerSelect.appendChild(option);
 
@@ -72,7 +65,6 @@ loadPlayers();
 // ==========================
 // コートクリック
 // ==========================
-
 let clickX = 0;
 let clickY = 0;
 
@@ -81,41 +73,32 @@ court.addEventListener("click", (e) => {
     const rect = court.getBoundingClientRect();
 
     clickX = Math.round(e.clientX - rect.left);
-
     clickY = Math.round(e.clientY - rect.top);
 
     positionText.textContent =
         "X : " + clickX +
-        "　Y : " + clickY;
+        "   Y : " + clickY;
 
 });
 
 // ==========================
 // エリア判定
+// 上半分 = 右
+// 下半分 = 左
 // ==========================
-
 function getArea(x, y) {
 
-    if (x < 300)
-        return "左";
-
-    if (x > 600)
+    if (y < 225) {
         return "右";
+    }
 
-    if (y < 150)
-        return "上";
-
-    if (y > 300)
-        return "下";
-
-    return "中央";
+    return "左";
 
 }
 
 // ==========================
-// マーカー作成
+// マーカー表示
 // ==========================
-
 function createMarker(x, y, result) {
 
     const marker = document.createElement("div");
@@ -142,10 +125,10 @@ function createMarker(x, y, result) {
     court.appendChild(marker);
 
 }
+
 // ==========================
 // 登録
 // ==========================
-
 saveBtn.addEventListener("click", async () => {
 
     if (playerSelect.value == "") {
@@ -165,79 +148,55 @@ saveBtn.addEventListener("click", async () => {
     const data = {
 
         player: playerSelect.value,
-
         date: dateInput.value,
-
-        period: periodSelect.value,
-
-        gameTime: gameTimeInput.value,
-
-        shotType: shotTypeSelect.value,
-
+        quarter: quarterSelect.value,
+        time: timeInput.value,
+        menu: menuSelect.value,
         result: resultSelect.value,
-
         x: clickX,
-
         y: clickY,
-
         area: getArea(clickX, clickY),
-
         createdAt: serverTimestamp()
 
     };
 
     await addDoc(matchRef, data);
 
-    createMarker(
-
-        clickX,
-
-        clickY,
-
-        resultSelect.value
-
-    );
-
-    alert("試合記録を登録しました");
+    alert("登録しました");
 
 });
 
 // ==========================
-// 結果表示
+// 結果表示文字
 // ==========================
+function resultText(result) {
 
-function resultText(result){
-
-    switch(result){
+    switch (result) {
 
         case "goal":
-
             return "ゴール";
 
         case "miss":
-
             return "外れ";
 
         case "gk":
-
             return "GKセーブ";
 
         default:
-
             return result;
 
     }
 
 }
-// ==========================
-// 試合一覧表示
-// ==========================
 
+// ==========================
+// リアルタイム表示
+// ==========================
 onSnapshot(matchRef, (snapshot) => {
 
     table.innerHTML = "";
 
-    // 以前のマーカーを削除
+    // 古いマーカー削除
     document.querySelectorAll(".marker").forEach(marker => {
         marker.remove();
     });
@@ -246,93 +205,56 @@ onSnapshot(matchRef, (snapshot) => {
 
         const data = docSnap.data();
 
-        // ==========================
-        // 一覧
-        // ==========================
-
+        // 表
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
 
             <td>${data.date ?? ""}</td>
-
+            <td>${data.quarter ?? ""}</td>
+            <td>${data.time ?? ""}</td>
             <td>${data.player}</td>
-
-            <td>${data.period}</td>
-
-            <td>${data.gameTime}</td>
-
-            <td>${data.shotType}</td>
-
+            <td>${data.menu}</td>
             <td>${resultText(data.result)}</td>
-
             <td>${data.area}</td>
-
             <td>
-
-                <button
-                    class="deleteBtn"
-                    data-id="${docSnap.id}">
-
+                <button class="deleteBtn" data-id="${docSnap.id}">
                     削除
-
                 </button>
-
             </td>
 
         `;
 
         table.appendChild(tr);
 
-        // ==========================
-        // マーカー表示
-        // ==========================
-
-        if (
-            typeof data.x === "number" &&
-            typeof data.y === "number"
-        ) {
+        // マーカー
+        if (typeof data.x === "number" && typeof data.y === "number") {
 
             createMarker(
-
                 data.x,
-
                 data.y,
-
                 data.result
-
             );
 
         }
 
     });
 
-    // ==========================
-    // 削除
-    // ==========================
-
+    // 削除処理
     document.querySelectorAll(".deleteBtn").forEach(button => {
 
         button.addEventListener("click", async () => {
 
-            if (!confirm("この試合記録を削除しますか？")) {
-
+            if (!confirm("この記録を削除しますか？")) {
                 return;
-
             }
 
             await deleteDoc(
-
                 doc(
-
                     db,
-
                     "match",
-
                     button.dataset.id
-
                 )
-
             );
 
         });
