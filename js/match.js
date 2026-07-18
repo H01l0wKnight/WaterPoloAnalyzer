@@ -15,7 +15,7 @@ import {
 // ==========================
 
 const playerRef = collection(db, "players");
-const matchRef = collection(db, "match");
+const matchRef = collection(db, "matches");
 
 // ==========================
 // HTML
@@ -148,57 +148,56 @@ function createMarker(x, y, result) {
 
 saveBtn.addEventListener("click", async () => {
 
-    if (playerSelect.value == "") {
-
+    if (playerSelect.value === "") {
         alert("選手を選択してください");
         return;
-
     }
 
-    if (clickX == 0 && clickY == 0) {
-
+    if (clickX === 0 && clickY === 0) {
         alert("コートをクリックしてください");
         return;
-
     }
 
-    const data = {
+    try {
 
-        player: playerSelect.value,
+        await addDoc(matchRef, {
 
-        date: dateInput.value,
+            player: playerSelect.value,
 
-        period: periodSelect.value,
+            date: dateInput.value,
 
-        gameTime: gameTimeInput.value,
+            period: periodSelect.value,
 
-        shotType: shotTypeSelect.value,
+            gameTime: gameTimeInput.value,
 
-        result: resultSelect.value,
+            shotType: shotTypeSelect.value,
 
-        x: clickX,
+            result: resultSelect.value,
 
-        y: clickY,
+            x: Number(clickX),
 
-        area: getArea(clickX, clickY),
+            y: Number(clickY),
 
-        createdAt: serverTimestamp()
+            area: getArea(clickX, clickY),
 
-    };
+            createdAt: serverTimestamp()
 
-    await addDoc(matchRef, data);
+        });
 
-    createMarker(
+        alert("試合記録を登録しました");
 
-        clickX,
+        positionText.textContent = "コートをクリックしてください";
 
-        clickY,
+        clickX = 0;
+        clickY = 0;
 
-        resultSelect.value
+    } catch (error) {
 
-    );
+        console.error(error);
 
-    alert("試合記録を登録しました");
+        alert("保存に失敗しました");
+
+    }
 
 });
 
@@ -232,72 +231,45 @@ function resultText(result){
 // ==========================
 // 試合一覧表示
 // ==========================
-
 onSnapshot(matchRef, (snapshot) => {
 
     table.innerHTML = "";
 
-    // 以前のマーカーを削除
-    document.querySelectorAll(".marker").forEach(marker => {
-        marker.remove();
-    });
+    document.querySelectorAll(".marker").forEach(marker => marker.remove());
 
     snapshot.forEach((docSnap) => {
 
         const data = docSnap.data();
 
-        // ==========================
-        // 一覧
-        // ==========================
-
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
-
             <td>${data.date ?? ""}</td>
-
             <td>${data.player}</td>
-
             <td>${data.period}</td>
-
             <td>${data.gameTime}</td>
-
             <td>${data.shotType}</td>
-
             <td>${resultText(data.result)}</td>
-
             <td>${data.area}</td>
-
             <td>
-
-                <button
-                    class="deleteBtn"
-                    data-id="${docSnap.id}">
-
+                <button class="deleteBtn" data-id="${docSnap.id}">
                     削除
-
                 </button>
-
             </td>
-
         `;
 
         table.appendChild(tr);
 
-        // ==========================
-        // マーカー表示
-        // ==========================
-
         if (
-            typeof data.x === "number" &&
-            typeof data.y === "number"
+            data.x !== undefined &&
+            data.y !== undefined
         ) {
 
             createMarker(
 
-                data.x,
+                Number(data.x),
 
-                data.y,
+                Number(data.y),
 
                 data.result
 
@@ -306,6 +278,20 @@ onSnapshot(matchRef, (snapshot) => {
         }
 
     });
+
+    document.querySelectorAll(".deleteBtn").forEach(button => {
+
+        button.onclick = async () => {
+
+            if (!confirm("削除しますか？")) return;
+
+            await deleteDoc(doc(db, "matches", button.dataset.id));
+
+        };
+
+    });
+
+});
 
     // ==========================
     // 削除
