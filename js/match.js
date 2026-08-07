@@ -13,12 +13,14 @@ import {
 // ==========================
 // Firestore
 // ==========================
+
 const playerRef = collection(db, "players");
 const matchRef = collection(db, "match");
 
 // ==========================
 // HTML
 // ==========================
+
 const playerSelect = document.getElementById("player");
 const dateInput = document.getElementById("date");
 const quarterSelect = document.getElementById("quarter");
@@ -28,15 +30,19 @@ const resultSelect = document.getElementById("result");
 const saveBtn = document.getElementById("saveBtn");
 
 const table = document.getElementById("matchTable");
+
 const court = document.getElementById("court");
+
 const positionText = document.getElementById("position");
 
 // 今日の日付
+
 dateInput.valueAsDate = new Date();
 
 // ==========================
-// 選手読み込み
+// 選手読込
 // ==========================
+
 async function loadPlayers() {
 
     playerSelect.innerHTML =
@@ -51,6 +57,7 @@ async function loadPlayers() {
         const option = document.createElement("option");
 
         option.value = p.name;
+
         option.textContent =
             p.number + "  " + p.name;
 
@@ -61,10 +68,10 @@ async function loadPlayers() {
 }
 
 loadPlayers();
-
 // ==========================
 // コートクリック
 // ==========================
+
 let clickX = 0;
 let clickY = 0;
 
@@ -86,10 +93,15 @@ court.addEventListener("click", (e) => {
 // 上半分 = 右
 // 下半分 = 左
 // ==========================
+
 function getArea(x, y) {
 
-    if (y < 225) {
+    const centerY = court.clientHeight / 2;
+
+    if (y < centerY) {
+
         return "右";
+
     }
 
     return "左";
@@ -99,23 +111,26 @@ function getArea(x, y) {
 // ==========================
 // マーカー表示
 // ==========================
+
 function createMarker(x, y, result) {
 
     const marker = document.createElement("div");
 
     marker.classList.add("marker");
 
-    if (result == "goal") {
+    switch (result) {
 
-        marker.classList.add("goalShot");
+        case "goal":
+            marker.classList.add("goalShot");
+            break;
 
-    } else if (result == "miss") {
+        case "miss":
+            marker.classList.add("missShot");
+            break;
 
-        marker.classList.add("missShot");
-
-    } else {
-
-        marker.classList.add("gkShot");
+        case "gk":
+            marker.classList.add("gkShot");
+            break;
 
     }
 
@@ -127,18 +142,32 @@ function createMarker(x, y, result) {
 }
 
 // ==========================
+// マーカー全削除
+// ==========================
+
+function clearMarkers() {
+
+    document.querySelectorAll(".marker").forEach(marker => {
+
+        marker.remove();
+
+    });
+
+}
+// ==========================
 // 登録
 // ==========================
+
 saveBtn.addEventListener("click", async () => {
 
-    if (playerSelect.value == "") {
+    if (playerSelect.value === "") {
 
         alert("選手を選択してください");
         return;
 
     }
 
-    if (clickX == 0 && clickY == 0) {
+    if (clickX === 0 && clickY === 0) {
 
         alert("コートをクリックしてください");
         return;
@@ -148,27 +177,54 @@ saveBtn.addEventListener("click", async () => {
     const data = {
 
         player: playerSelect.value,
+
         date: dateInput.value,
+
         quarter: quarterSelect.value,
+
         time: timeInput.value,
+
         menu: menuSelect.value,
+
         result: resultSelect.value,
+
         x: clickX,
+
         y: clickY,
+
         area: getArea(clickX, clickY),
+
         createdAt: serverTimestamp()
 
     };
 
-    await addDoc(matchRef, data);
+    try {
 
-    alert("登録しました");
+        await addDoc(matchRef, data);
+
+        alert("登録しました");
+
+        // 次回入力のために座標表示をリセット
+        positionText.textContent =
+            "コートをクリックしてください";
+
+        clickX = 0;
+        clickY = 0;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("保存に失敗しました");
+
+    }
 
 });
 
 // ==========================
-// 結果表示文字
+// 結果表示
 // ==========================
+
 function resultText(result) {
 
     switch (result) {
@@ -188,47 +244,63 @@ function resultText(result) {
     }
 
 }
+// ==========================
+// リアルタイム一覧表示
+// ==========================
 
-// ==========================
-// リアルタイム表示
-// ==========================
 onSnapshot(matchRef, (snapshot) => {
 
     table.innerHTML = "";
 
-    // 古いマーカー削除
-    document.querySelectorAll(".marker").forEach(marker => {
-        marker.remove();
-    });
+    // コート上のマーカーを一度削除
+    clearMarkers();
 
     snapshot.forEach((docSnap) => {
 
         const data = docSnap.data();
 
-        // 表
+        // ----- 表 -----
+
         const tr = document.createElement("tr");
 
         tr.innerHTML = `
 
             <td>${data.date ?? ""}</td>
+
             <td>${data.quarter ?? ""}</td>
+
             <td>${data.time ?? ""}</td>
+
             <td>${data.player}</td>
+
             <td>${data.menu}</td>
+
             <td>${resultText(data.result)}</td>
+
             <td>${data.area}</td>
+
             <td>
-                <button class="deleteBtn" data-id="${docSnap.id}">
+
+                <button
+                    class="deleteBtn"
+                    data-id="${docSnap.id}">
+
                     削除
+
                 </button>
+
             </td>
 
         `;
 
         table.appendChild(tr);
 
-        // マーカー
-        if (typeof data.x === "number" && typeof data.y === "number") {
+        // ----- マーカー表示 -----
+
+        if (
+            typeof data.x === "number" &&
+            typeof data.y === "number"
+        ) {
 
             createMarker(
                 data.x,
@@ -240,22 +312,37 @@ onSnapshot(matchRef, (snapshot) => {
 
     });
 
+    // ==========================
     // 削除処理
+    // ==========================
+
     document.querySelectorAll(".deleteBtn").forEach(button => {
 
         button.addEventListener("click", async () => {
 
             if (!confirm("この記録を削除しますか？")) {
+
                 return;
+
             }
 
-            await deleteDoc(
-                doc(
-                    db,
-                    "match",
-                    button.dataset.id
-                )
-            );
+            try {
+
+                await deleteDoc(
+                    doc(
+                        db,
+                        "match",
+                        button.dataset.id
+                    )
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert("削除に失敗しました");
+
+            }
 
         });
 
