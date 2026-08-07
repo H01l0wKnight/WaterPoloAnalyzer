@@ -5,7 +5,8 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>分析 | WaterPolo Analyzer</title>
 
@@ -25,207 +26,225 @@
 
 <main>
 
-    <!-- ==========================
-         タブ
-    =========================== -->
-
-    <section class="tabMenu">
-
-        <button class="tabButton active"
-                data-tab="practice">
-
-            練習分析
-
-        </button>
-
-        <button class="tabButton"
-                data-tab="match">
-
-            試合分析
-
-        </button>
-
-    </section>
-
-    <!-- ==========================
+    <!-- =========================
          練習分析
-    =========================== -->
+    ========================== -->
 
-    <section id="practiceTab" class="tabContent active">
+    <h2>🏊 練習分析</h2>
 
-        <h2>🏊 練習分析</h2>
+    <section class="cardArea">
 
-        <section class="control">
+        <div class="card">
 
-            <select id="practicePlayer">
+            <h3>シュート数</h3>
 
-                <option value="all">
-
-                    全選手
-
-                </option>
-
-            </select>
-
-            <select id="practiceMenu">
-
-                <option value="all">
-
-                    全メニュー
-
-                </option>
-
-            </select>
-
-            <select id="practiceResult">
-
-                <option value="all">
-
-                    全結果
-
-                </option>
-
-                <option value="goal">
-
-                    ゴール
-
-                </option>
-
-                <option value="miss">
-
-                    外れ
-
-                </option>
-
-                <option value="gk">
-
-                    GKセーブ
-
-                </option>
-
-            </select>
-
-        </section>
-
-        <div id="practiceCourt">
-
-            <div class="centerLine"></div>
-
-            <div class="goal leftGoal"></div>
-
-            <div class="goal rightGoal"></div>
+            <p id="practiceShot">0</p>
 
         </div>
 
-        <section class="summary">
+        <div class="card">
 
-            <div>シュート数：<span id="practiceShot">0</span></div>
+            <h3>ゴール</h3>
 
-            <div>ゴール：<span id="practiceGoal">0</span></div>
+            <p id="practiceGoal">0</p>
 
-            <div>外れ：<span id="practiceMiss">0</span></div>
+        </div>
 
-            <div>GK：<span id="practiceGK">0</span></div>
+        <div class="card">
 
-            <div>成功率：<span id="practiceRate">0%</span></div>
+            <h3>成功率</h3>
 
-        </section>
+            <p id="practiceRate">0%</p>
+
+        </div>
 
     </section>
 
-    <!-- ==========================
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>選手</th>
+
+                <th>シュート</th>
+
+                <th>ゴール</th>
+
+                <th>成功率</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="practiceTable">
+
+        </tbody>
+
+    </table>
+
+    <!-- =========================
          試合分析
-    =========================== -->
+    ========================== -->
 
-    <section id="matchTab" class="tabContent">
+    <h2>🤽 試合分析</h2>
 
-        <h2>🤽 試合分析</h2>
+    <section class="cardArea">
 
-        <section class="control">
+        <div class="card">
 
-            <select id="matchPlayer">
+            <h3>シュート数</h3>
 
-                <option value="all">
-
-                    全選手
-
-                </option>
-
-            </select>
-
-            <select id="matchQuarter">
-
-                <option value="all">
-
-                    全Q
-
-                </option>
-
-                <option value="1Q">1Q</option>
-
-                <option value="2Q">2Q</option>
-
-                <option value="3Q">3Q</option>
-
-                <option value="4Q">4Q</option>
-
-            </select>
-
-            <select id="matchResult">
-
-                <option value="all">
-
-                    全結果
-
-                </option>
-
-                <option value="goal">
-
-                    ゴール
-
-                </option>
-
-                <option value="miss">
-
-                    外れ
-
-                </option>
-
-                <option value="gk">
-
-                    GKセーブ
-
-                </option>
-
-            </select>
-
-        </section>
-
-        <div id="matchCourt">
-
-            <div class="centerLine"></div>
-
-            <div class="goal leftGoal"></div>
-
-            <div class="goal rightGoal"></div>
+            <p id="matchShot">0</p>
 
         </div>
 
-        <section class="summary">
+        <div class="card">
 
-            <div>シュート数：<span id="matchShot">0</span></div>
+            <h3>ゴール</h3>
 
-            <div>ゴール：<span id="matchGoal">0</span></div>
+            <p id="matchGoal">0</p>
 
-            <div>外れ：<span id="matchMiss">0</span></div>
+        </div>
 
-            <div>GK：<span id="matchGK">0</span></div>
+        <div class="card">
 
-            <div>成功率：<span id="matchRate">0%</span></div>
+            <h3>成功率</h3>
 
-        </section>
+            <p id="matchRate">0%</p>
+
+        </div>
 
     </section>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>選手</th>
+
+                <th>シュート</th>
+
+                <th>ゴール</th>
+
+                <th>成功率</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="matchTable">
+
+        </tbody>
+
+    </table>
+
+    <!-- =========================
+         シュート位置分析
+    ========================== -->
+
+    <h2>📍 シュート位置分析</h2>
+
+    <section class="control">
+
+        <select id="playerFilter">
+
+            <option value="all">
+
+                全選手
+
+            </option>
+
+        </select>
+
+        <select id="dataFilter">
+
+            <option value="practice">
+
+                練習
+
+            </option>
+
+            <option value="match">
+
+                試合
+
+            </option>
+
+        </select>
+
+        <select id="quarterFilter">
+
+            <option value="all">
+
+                全Q
+
+            </option>
+
+            <option value="1Q">1Q</option>
+
+            <option value="2Q">2Q</option>
+
+            <option value="3Q">3Q</option>
+
+            <option value="4Q">4Q</option>
+
+        </select>
+
+        <select id="menuFilter">
+
+            <option value="all">
+
+                全メニュー
+
+            </option>
+
+        </select>
+
+        <select id="resultFilter">
+
+            <option value="all">
+
+                全結果
+
+            </option>
+
+            <option value="goal">
+
+                ゴール
+
+            </option>
+
+            <option value="miss">
+
+                外れ
+
+            </option>
+
+            <option value="gk">
+
+                GKセーブ
+
+            </option>
+
+        </select>
+
+    </section>
+
+    <!-- コート -->
+
+    <div id="analysisCourt">
+
+        <div class="centerLine"></div>
+
+        <div class="goal leftGoal"></div>
+
+        <div class="goal rightGoal"></div>
+
+    </div>
 
     <br>
 
