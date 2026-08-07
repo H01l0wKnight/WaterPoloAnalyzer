@@ -13,65 +13,59 @@ main{
 }
 
 /* ==========================
-   タブ
+   カード
 ========================== */
 
-.tabMenu{
+.cardArea{
 
     display:flex;
 
     justify-content:center;
 
+    flex-wrap:wrap;
+
     gap:20px;
 
-    margin-bottom:30px;
+    margin:25px 0;
 
 }
 
-.tabButton{
+.card{
 
-    padding:12px 25px;
+    width:220px;
 
-    font-size:18px;
+    background:white;
 
-    border:none;
+    border-radius:10px;
 
-    border-radius:8px;
+    padding:20px;
 
-    cursor:pointer;
+    text-align:center;
 
-    background:#cccccc;
-
-    transition:.3s;
+    box-shadow:0 0 8px rgba(0,0,0,.2);
 
 }
 
-.tabButton.active{
+.card h3{
 
-    background:#003366;
+    margin-bottom:10px;
 
-    color:white;
-
-}
-
-/* ==========================
-   タブ表示
-========================== */
-
-.tabContent{
-
-    display:none;
+    color:#003366;
 
 }
 
-.tabContent.active{
+.card p{
 
-    display:block;
+    font-size:34px;
+
+    font-weight:bold;
+
+    color:#003366;
 
 }
 
 /* ==========================
-   入力欄
+   フィルター
 ========================== */
 
 .control{
@@ -84,7 +78,7 @@ main{
 
     gap:15px;
 
-    margin-bottom:25px;
+    margin:30px 0;
 
 }
 
@@ -104,8 +98,7 @@ main{
    コート
 ========================== */
 
-#practiceCourt,
-#matchCourt{
+#analysisCourt{
 
     position:relative;
 
@@ -120,8 +113,6 @@ main{
     border:5px solid white;
 
     box-shadow:0 0 10px gray;
-
-    overflow:hidden;
 
 }
 
@@ -189,6 +180,8 @@ main{
 
     border:2px solid white;
 
+    cursor:pointer;
+
 }
 
 .goalShot{
@@ -210,85 +203,75 @@ main{
 }
 
 /* ==========================
-   集計
+   テーブル
 ========================== */
 
-.summary{
+table{
 
-    display:grid;
+    width:100%;
 
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    border-collapse:collapse;
 
-    gap:15px;
-
-    margin-top:30px;
-
-}
-
-.summary div{
+    margin:25px 0;
 
     background:white;
 
-    padding:20px;
+}
+
+th,
+td{
+
+    border:1px solid #999;
+
+    padding:10px;
 
     text-align:center;
 
-    border-radius:10px;
-
-    box-shadow:0 0 8px rgba(0,0,0,.2);
-
-    font-size:18px;
-
-    font-weight:bold;
-
 }
 
-/* ==========================
-   ホームボタン
-========================== */
-
-main>a{
-
-    display:flex;
-
-    justify-content:center;
-
-    margin-top:40px;
-
-}
-
-main>a button{
-
-    padding:12px 30px;
-
-    font-size:18px;
-
-    border:none;
-
-    border-radius:8px;
+th{
 
     background:#003366;
 
     color:white;
 
+}
+
+/* ==========================
+   ボタン
+========================== */
+
+button{
+
+    padding:10px 20px;
+
+    background:#003366;
+
+    color:white;
+
+    border:none;
+
+    border-radius:8px;
+
     cursor:pointer;
+
+    transition:.3s;
 
 }
 
-main>a button:hover{
+button:hover{
 
     background:#0055aa;
 
 }
 
 /* ==========================
-   スマホ
+   スマホ対応
 ========================== */
 
 @media(max-width:950px){
 
-#practiceCourt,
-#matchCourt{
+#analysisCourt{
 
     width:100%;
 
@@ -296,9 +279,9 @@ main>a button:hover{
 
 }
 
-.summary{
+.card{
 
-    grid-template-columns:1fr;
+    width:100%;
 
 }
 
