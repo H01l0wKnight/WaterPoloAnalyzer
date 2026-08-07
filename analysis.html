@@ -1,1 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
 
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>分析 | WaterPolo Analyzer</title>
+
+    <link rel="stylesheet" href="css/common.css">
+
+    <link rel="stylesheet" href="css/analysis.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <h1>📊 WaterPolo Analyzer</h1>
+
+</header>
+
+<main>
+
+    <!-- ==========================
+         タブ
+    =========================== -->
+
+    <section class="tabMenu">
+
+        <button class="tabButton active"
+                data-tab="practice">
+
+            練習分析
+
+        </button>
+
+        <button class="tabButton"
+                data-tab="match">
+
+            試合分析
+
+        </button>
+
+    </section>
+
+    <!-- ==========================
+         練習分析
+    =========================== -->
+
+    <section id="practiceTab" class="tabContent active">
+
+        <h2>🏊 練習分析</h2>
+
+        <section class="control">
+
+            <select id="practicePlayer">
+
+                <option value="all">
+
+                    全選手
+
+                </option>
+
+            </select>
+
+            <select id="practiceMenu">
+
+                <option value="all">
+
+                    全メニュー
+
+                </option>
+
+            </select>
+
+            <select id="practiceResult">
+
+                <option value="all">
+
+                    全結果
+
+                </option>
+
+                <option value="goal">
+
+                    ゴール
+
+                </option>
+
+                <option value="miss">
+
+                    外れ
+
+                </option>
+
+                <option value="gk">
+
+                    GKセーブ
+
+                </option>
+
+            </select>
+
+        </section>
+
+        <div id="practiceCourt">
+
+            <div class="centerLine"></div>
+
+            <div class="goal leftGoal"></div>
+
+            <div class="goal rightGoal"></div>
+
+        </div>
+
+        <section class="summary">
+
+            <div>シュート数：<span id="practiceShot">0</span></div>
+
+            <div>ゴール：<span id="practiceGoal">0</span></div>
+
+            <div>外れ：<span id="practiceMiss">0</span></div>
+
+            <div>GK：<span id="practiceGK">0</span></div>
+
+            <div>成功率：<span id="practiceRate">0%</span></div>
+
+        </section>
+
+    </section>
+
+    <!-- ==========================
+         試合分析
+    =========================== -->
+
+    <section id="matchTab" class="tabContent">
+
+        <h2>🤽 試合分析</h2>
+
+        <section class="control">
+
+            <select id="matchPlayer">
+
+                <option value="all">
+
+                    全選手
+
+                </option>
+
+            </select>
+
+            <select id="matchQuarter">
+
+                <option value="all">
+
+                    全Q
+
+                </option>
+
+                <option value="1Q">1Q</option>
+
+                <option value="2Q">2Q</option>
+
+                <option value="3Q">3Q</option>
+
+                <option value="4Q">4Q</option>
+
+            </select>
+
+            <select id="matchResult">
+
+                <option value="all">
+
+                    全結果
+
+                </option>
+
+                <option value="goal">
+
+                    ゴール
+
+                </option>
+
+                <option value="miss">
+
+                    外れ
+
+                </option>
+
+                <option value="gk">
+
+                    GKセーブ
+
+                </option>
+
+            </select>
+
+        </section>
+
+        <div id="matchCourt">
+
+            <div class="centerLine"></div>
+
+            <div class="goal leftGoal"></div>
+
+            <div class="goal rightGoal"></div>
+
+        </div>
+
+        <section class="summary">
+
+            <div>シュート数：<span id="matchShot">0</span></div>
+
+            <div>ゴール：<span id="matchGoal">0</span></div>
+
+            <div>外れ：<span id="matchMiss">0</span></div>
+
+            <div>GK：<span id="matchGK">0</span></div>
+
+            <div>成功率：<span id="matchRate">0%</span></div>
+
+        </section>
+
+    </section>
+
+    <br>
+
+    <a href="index.html">
+
+        <button>
+
+            🏠 ホームへ戻る
+
+        </button>
+
+    </a>
+
+</main>
+
+<script type="module" src="js/analysis.js"></script>
+
+</body>
+
+</html>
