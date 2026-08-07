@@ -1,0 +1,305 @@
+/* ==========================
+   メイン
+========================== */
+
+main{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:30px;
+
+}
+
+/* ==========================
+   タブ
+========================== */
+
+.tabMenu{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:20px;
+
+    margin-bottom:30px;
+
+}
+
+.tabButton{
+
+    padding:12px 25px;
+
+    font-size:18px;
+
+    border:none;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    background:#cccccc;
+
+    transition:.3s;
+
+}
+
+.tabButton.active{
+
+    background:#003366;
+
+    color:white;
+
+}
+
+/* ==========================
+   タブ表示
+========================== */
+
+.tabContent{
+
+    display:none;
+
+}
+
+.tabContent.active{
+
+    display:block;
+
+}
+
+/* ==========================
+   入力欄
+========================== */
+
+.control{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:15px;
+
+    margin-bottom:25px;
+
+}
+
+.control select{
+
+    padding:10px 15px;
+
+    font-size:16px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+}
+
+/* ==========================
+   コート
+========================== */
+
+#practiceCourt,
+#matchCourt{
+
+    position:relative;
+
+    width:900px;
+
+    height:450px;
+
+    margin:30px auto;
+
+    background:#4FC3F7;
+
+    border:5px solid white;
+
+    box-shadow:0 0 10px gray;
+
+    overflow:hidden;
+
+}
+
+/* センターライン */
+
+.centerLine{
+
+    position:absolute;
+
+    left:50%;
+
+    top:0;
+
+    width:3px;
+
+    height:100%;
+
+    background:white;
+
+}
+
+/* ゴール */
+
+.goal{
+
+    position:absolute;
+
+    width:12px;
+
+    height:100px;
+
+    background:red;
+
+    top:175px;
+
+}
+
+.leftGoal{
+
+    left:0;
+
+}
+
+.rightGoal{
+
+    right:0;
+
+}
+
+/* ==========================
+   マーカー
+========================== */
+
+.marker{
+
+    position:absolute;
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    transform:translate(-50%,-50%);
+
+    border:2px solid white;
+
+}
+
+.goalShot{
+
+    background:#00cc00;
+
+}
+
+.missShot{
+
+    background:#ff0000;
+
+}
+
+.gkShot{
+
+    background:#FFD700;
+
+}
+
+/* ==========================
+   集計
+========================== */
+
+.summary{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+    gap:15px;
+
+    margin-top:30px;
+
+}
+
+.summary div{
+
+    background:white;
+
+    padding:20px;
+
+    text-align:center;
+
+    border-radius:10px;
+
+    box-shadow:0 0 8px rgba(0,0,0,.2);
+
+    font-size:18px;
+
+    font-weight:bold;
+
+}
+
+/* ==========================
+   ホームボタン
+========================== */
+
+main>a{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:40px;
+
+}
+
+main>a button{
+
+    padding:12px 30px;
+
+    font-size:18px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#003366;
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+main>a button:hover{
+
+    background:#0055aa;
+
+}
+
+/* ==========================
+   スマホ
+========================== */
+
+@media(max-width:950px){
+
+#practiceCourt,
+#matchCourt{
+
+    width:100%;
+
+    height:300px;
+
+}
+
+.summary{
+
+    grid-template-columns:1fr;
+
+}
+
+}
